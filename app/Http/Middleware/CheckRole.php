@@ -11,29 +11,27 @@ class CheckRole
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string  ...$roles
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next, string ...$roles): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!$request->user()) {
             return redirect()->route('login');
         }
 
-        $userRole = $request->user()->role;
-
-        // Admin has access to everything
-        if ($userRole === 'admin') {
+        // Allow admin to access everything
+        if ($request->user()->isAdmin()) {
             return $next($request);
         }
 
-        // Check if user has one of the required roles
-        if (in_array($userRole, $roles)) {
-            return $next($request);
-        }
-
-        // If worker tries to access user routes, allow it
-        if ($userRole === 'worker' && in_array('user', $roles)) {
-            return $next($request);
+        foreach ($roles as $role) {
+            $methodName = 'is' . ucfirst($role);
+            if (method_exists($request->user(), $methodName) && $request->user()->$methodName()) {
+                return $next($request);
+            }
         }
 
         abort(403, 'Unauthorized action.');

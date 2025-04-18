@@ -4,25 +4,42 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'user_id',
         'waste_report_id',
-        'text',
+        'content',
     ];
 
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array<string>
+     */
     protected $with = ['user'];
 
-    public function user()
+    /**
+     * Get the user that created the comment.
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function wasteReport()
+    /**
+     * Get the waste report that owns the comment.
+     */
+    public function wasteReport(): BelongsTo
     {
         return $this->belongsTo(WasteReport::class);
     }

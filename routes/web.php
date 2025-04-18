@@ -6,6 +6,7 @@ use App\Http\Controllers\WasteReportController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\GarbageScheduleController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +15,29 @@ use App\Http\Controllers\GarbageScheduleController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $recentReports = \App\Models\WasteReport::with('site')
+        ->latest()
+        ->take(3)
+        ->get()
+        ->map(function($report) {
+            return (object)[
+                'id' => $report->id,
+                'title' => $report->title,
+                'location' => $report->site->name,
+                'status' => ucfirst($report->status),
+                'image_url' => $report->image_url
+            ];
+        });
+    
+    return view('welcome', compact('recentReports'));
 });
 
 Route::middleware(['auth'])->group(function () {
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     // Dashboard Routes - accessible by all authenticated users
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     

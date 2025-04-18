@@ -10,33 +10,109 @@ class SitePolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny(User $user)
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
     {
         return true; // All authenticated users can view sites
     }
 
-    public function view(User $user, Site $site)
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Site $site): bool
     {
         return true; // All authenticated users can view individual sites
     }
 
-    public function create(User $user)
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
     {
-        return $user->isAdmin(); // Only admins can create sites
+        // Only admins can create sites
+        return $user->isAdmin();
     }
 
-    public function update(User $user, Site $site)
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Site $site): bool
     {
-        return $user->isAdmin(); // Only admins can update sites
+        // Only admins can update sites
+        return $user->isAdmin();
     }
 
-    public function delete(User $user, Site $site)
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Site $site): bool
     {
-        return $user->isAdmin(); // Only admins can delete sites
+        // Only admins can delete sites
+        return $user->isAdmin();
     }
 
-    public function manageSchedule(User $user, Site $site)
+    /**
+     * Determine whether the user can manage schedules for the site.
+     */
+    public function manageSchedules(User $user, Site $site): bool
     {
-        return $user->isAdmin(); // Only admins can manage garbage collection schedules
+        // Only admins can manage garbage collection schedules
+        return $user->isAdmin();
+    }
+
+    /**
+     * Determine whether the user can view site statistics.
+     */
+    public function viewStatistics(User $user, Site $site): bool
+    {
+        // Admins and workers can view site statistics
+        return $user->isAdmin() || $user->isWorker();
+    }
+
+    /**
+     * Determine whether the user can view site reports.
+     */
+    public function viewReports(User $user, Site $site): bool
+    {
+        // All authenticated users can view site reports
+        return true;
+    }
+
+    /**
+     * Determine whether the user can export site data.
+     */
+    public function export(User $user): bool
+    {
+        // Only admins can export site data
+        return $user->isAdmin();
+    }
+
+    /**
+     * Determine whether the user can view the site's location on map.
+     */
+    public function viewMap(User $user, Site $site): bool
+    {
+        // All authenticated users can view site locations on map
+        return true;
+    }
+
+    /**
+     * Determine whether the user can view site activity history.
+     */
+    public function viewHistory(User $user, Site $site): bool
+    {
+        // Admins and workers can view site history
+        return $user->isAdmin() || $user->isWorker();
+    }
+
+    /**
+     * Determine whether the user can manage site workers.
+     */
+    public function manageWorkers(User $user, Site $site): bool
+    {
+        // Only admins can manage site workers
+        return $user->isAdmin();
     }
 }

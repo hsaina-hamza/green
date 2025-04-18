@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\Traits\ManagesNotifications;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, ManagesNotifications;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -46,20 +44,49 @@ class User extends Authenticatable
     ];
 
     /**
-     * Valid user roles.
-     *
-     * @var array<string>
+     * Get the user's notification preferences.
      */
-    public const ROLES = [
-        'admin',
-        'worker',
-        'user',
-    ];
+    public function notificationPreferences()
+    {
+        return $this->hasMany(NotificationPreference::class);
+    }
+
+    /**
+     * Get notification preferences for a specific category.
+     */
+    public function getNotificationPreferencesForCategory($category)
+    {
+        $preferences = $this->notificationPreferences()
+            ->where('category', $category)
+            ->first();
+
+        if (!$preferences) {
+            // Create default preferences if none exist
+            $preferences = $this->notificationPreferences()->create([
+                'category' => $category,
+                'email' => true,
+                'sms' => false,
+            ]);
+        }
+
+        return [
+            'email' => $preferences->email,
+            'sms' => $preferences->sms,
+        ];
+    }
+
+    /**
+     * Check if the user has a specific role.
+     */
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
 
     /**
      * Get the waste reports created by the user.
      */
-    public function wasteReports(): HasMany
+    public function wasteReports()
     {
         return $this->hasMany(WasteReport::class);
     }
@@ -67,157 +94,16 @@ class User extends Authenticatable
     /**
      * Get the waste reports assigned to the user.
      */
-    public function assignedReports(): HasMany
+    public function assignedReports()
     {
-        return $this->hasMany(WasteReport::class, 'assigned_worker_id');
+        return $this->hasMany(WasteReport::class, 'worker_id');
     }
 
     /**
-     * Get the comments made by the user.
+     * Get the comments created by the user.
      */
-    public function comments(): HasMany
+    public function comments()
     {
         return $this->hasMany(Comment::class);
-    }
-
-    /**
-     * Check if the user is an admin.
-     */
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
-    /**
-     * Check if the user is a worker.
-     */
-    public function isWorker(): bool
-    {
-        return $this->role === 'worker';
-    }
-
-    /**
-     * Check if the user is a regular user.
-     */
-    public function isRegularUser(): bool
-    {
-        return $this->role === 'user';
-    }
-
-    /**
-     * Get the user's active assigned reports.
-     */
-    public function getActiveAssignedReports(): HasMany
-    {
-        return $this->assignedReports()
-            ->whereNotIn('status', ['completed', 'cancelled']);
-    }
-
-    /**
-     * Get the user's pending reports.
-     */
-    public function getPendingReports(): HasMany
-    {
-        return $this->wasteReports()
-            ->where('status', 'pending');
-    }
-
-    /**
-     * Get the user's completed reports.
-     */
-    public function getCompletedReports(): HasMany
-    {
-        return $this->wasteReports()
-            ->where('status', 'completed');
-    }
-
-    /**
-     * Get the user's notification preferences for a specific category.
-     */
-    public function getNotificationPreferencesForCategory(string $category): array
-    {
-        return $this->notificationPreferences()
-            ->where('category', $category)
-            ->get()
-            ->mapWithKeys(function ($preference) {
-                return [$preference->channel => $preference->enabled];
-            })
-            ->toArray();
-    }
-
-    /**
-     * Route notifications for the mail channel.
-     *
-     * @return string
-     */
-    public function routeNotificationForMail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * Route notifications for the SMS channel.
-     *
-     * @return string|null
-     */
-    public function routeNotificationForSms(): ?string
-    {
-        return $this->phone_number;
-    }
-
-    /**
-     * Get the user's work statistics.
-     */
-    public function getWorkStatistics(): array
-    {
-        $assignedReports = $this->assignedReports();
-        
-        return [
-            'total_assigned' => $assignedReports->count(),
-            'completed' => $assignedReports->where('status', 'completed')->count(),
-            'in_progress' => $assignedReports->where('status', 'in_progress')->count(),
-            'pending' => $assignedReports->where('status', 'pending')->count(),
-            'completion_rate' => $this->calculateCompletionRate(),
-            'average_completion_time' => $this->calculateAverageCompletionTime(),
-        ];
-    }
-
-    /**
-     * Calculate the user's report completion rate.
-     */
-    protected function calculateCompletionRate(): float
-    {
-        $total = $this->assignedReports()->count();
-        if ($total === 0) {
-            return 0;
-        }
-
-        $completed = $this->assignedReports()
-            ->where('status', 'completed')
-            ->count();
-
-        return round(($completed / $total) * 100, 2);
-    }
-
-    /**
-     * Calculate the user's average report completion time in hours.
-     */
-    protected function calculateAverageCompletionTime(): float
-    {
-        $completedReports = $this->assignedReports()
-            ->where('status', 'completed')
-            ->get();
-
-        if ($completedReports->isEmpty()) {
-            return 0;
-        }
-
-        $totalHours = $completedReports->sum(function ($report) {
-            $start = $report->assigned_at ?? $report->created_at;
-            $end = $report->completed_at;
-            return $end->diffInHours($start);
-        });
-
-        return round($totalHours / $completedReports->count(), 1);
     }
 }

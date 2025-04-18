@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
-use App\Models\WasteReport;
 use App\Models\Comment;
-use App\Models\Site;
 use App\Models\GarbageSchedule;
-use App\Policies\WasteReportPolicy;
+use App\Models\Site;
+use App\Models\WasteReport;
 use App\Policies\CommentPolicy;
-use App\Policies\SitePolicy;
 use App\Policies\GarbageSchedulePolicy;
+use App\Policies\SitePolicy;
+use App\Policies\WasteReportPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -32,7 +32,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Register role-based gates
+        $this->registerPolicies();
+
+        // Define gates for role-based permissions
         Gate::define('access-admin', function ($user) {
             return $user->isAdmin();
         });
@@ -41,7 +43,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->isWorker() || $user->isAdmin();
         });
 
-        // Define gates for specific actions
+        Gate::define('access-dashboard', function ($user) {
+            return $user->isAdmin() || $user->isWorker();
+        });
+
         Gate::define('manage-users', function ($user) {
             return $user->isAdmin();
         });
@@ -56,6 +61,21 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('view-statistics', function ($user) {
             return $user->isAdmin() || $user->isWorker();
+        });
+
+        Gate::define('export-data', function ($user) {
+            return $user->isAdmin();
+        });
+
+        Gate::define('moderate-content', function ($user) {
+            return $user->isAdmin();
+        });
+
+        // Super admin can do everything
+        Gate::before(function ($user, $ability) {
+            if ($user->isAdmin()) {
+                return true;
+            }
         });
     }
 }

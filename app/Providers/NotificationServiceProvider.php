@@ -104,16 +104,13 @@ class NotificationServiceProvider extends ServiceProvider
 
         // Register the SMS channel
         $this->app->singleton('sms.channel', function ($app) {
-            return new SmsChannel($app->make('notification.sms.config'));
+            $config = $app->make('notification.sms.config');
+            return new SmsChannel($config);
         });
 
-        // Register the channel manager with custom channels
+        // Register the channel manager
         $this->app->singleton(ChannelManager::class, function ($app) {
-            $manager = new ChannelManager($app);
-            $manager->extend('sms', function ($app, $name) {
-                return $app->make('sms.channel');
-            });
-            return $manager;
+            return new ChannelManager($app);
         });
     }
 
@@ -124,6 +121,11 @@ class NotificationServiceProvider extends ServiceProvider
     {
         // Register custom notification channels
         $manager = $this->app->make(ChannelManager::class);
+        
+        // Register SMS channel
+        $manager->extend('sms', function ($container, $name) use ($app) {
+            return $this->app->make('sms.channel');
+        });
 
         // Register notification channel resolvers
         $this->registerChannelResolvers($manager);
