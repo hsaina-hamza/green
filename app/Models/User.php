@@ -76,11 +76,46 @@ class User extends Authenticatable
     }
 
     /**
+     * Valid user roles.
+     *
+     * @var array<string>
+     */
+    public const ROLES = [
+        'admin',
+        'worker',
+        'user',
+    ];
+
+    /**
      * Check if the user has a specific role.
      */
     public function hasRole($role)
     {
         return $this->role === $role;
+    }
+
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if the user is a worker.
+     */
+    public function isWorker(): bool
+    {
+        return $this->role === 'worker';
+    }
+
+    /**
+     * Check if the user is a regular user.
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
     }
 
     /**
