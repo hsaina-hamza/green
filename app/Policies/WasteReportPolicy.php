@@ -13,25 +13,28 @@ class WasteReportPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        return true; // All authenticated users can view waste reports
+        // Allow all users (including guests) to view waste reports
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, WasteReport $wasteReport): bool
+    public function view(?User $user, WasteReport $wasteReport): bool
     {
-        return true; // All authenticated users can view individual waste reports
+        // Allow all users (including guests) to view individual waste reports
+        return true;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(?User $user): bool
     {
-        return true; // All authenticated users can create waste reports
+        // Allow any authenticated user to create waste reports
+        return $user !== null;
     }
 
     /**
@@ -39,18 +42,13 @@ class WasteReportPolicy
      */
     public function update(User $user, WasteReport $wasteReport): bool
     {
-        // Admin can update any report
-        if ($user->isAdmin()) {
+        // Allow users to update their own reports
+        if ($user->id === $wasteReport->user_id) {
             return true;
         }
 
-        // Workers can update reports assigned to them
-        if ($user->isWorker() && $wasteReport->assigned_worker_id === $user->id) {
-            return true;
-        }
-
-        // Users can update their own reports if they're still pending
-        return $user->id === $wasteReport->user_id && $wasteReport->status === 'pending';
+        // Allow workers and admins to update any report
+        return $user->hasAnyRole(['worker', 'admin']);
     }
 
     /**
@@ -58,17 +56,12 @@ class WasteReportPolicy
      */
     public function delete(User $user, WasteReport $wasteReport): bool
     {
-        // Only admins and the original creator (if report is still pending) can delete
-        return $user->isAdmin() || 
-               ($user->id === $wasteReport->user_id && $wasteReport->status === 'pending');
-    }
+        // Allow users to delete their own reports
+        if ($user->id === $wasteReport->user_id) {
+            return true;
+        }
 
-    /**
-     * Determine whether the user can assign workers to the model.
-     */
-    public function assign(User $user, WasteReport $wasteReport): bool
-    {
-        // Only admins can assign workers to reports
+        // Allow admins to delete any report
         return $user->isAdmin();
     }
 
@@ -77,22 +70,35 @@ class WasteReportPolicy
      */
     public function updateStatus(User $user, WasteReport $wasteReport): bool
     {
-        // Admin can update any report's status
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        // Workers can update status of reports assigned to them
-        return $user->isWorker() && $wasteReport->assigned_worker_id === $user->id;
+        // Only workers and admins can update status
+        return $user->hasAnyRole(['worker', 'admin']);
     }
 
     /**
-     * Determine whether the user can view reports statistics.
+     * Determine whether the user can assign workers to the model.
+     */
+    public function assign(User $user, WasteReport $wasteReport): bool
+    {
+        // Only admins can assign workers
+        return $user->isAdmin();
+    }
+
+    /**
+     * Determine whether the user can add comments to the model.
+     */
+    public function comment(User $user, WasteReport $wasteReport): bool
+    {
+        // Any authenticated user can comment
+        return true;
+    }
+
+    /**
+     * Determine whether the user can view report statistics.
      */
     public function viewStatistics(User $user): bool
     {
-        // Only admins and workers can view statistics
-        return $user->isAdmin() || $user->isWorker();
+        // Only workers and admins can view statistics
+        return $user->hasAnyRole(['worker', 'admin']);
     }
 
     /**

@@ -32,6 +32,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register all policies
         $this->registerPolicies();
 
         // Define gates for role-based permissions
@@ -40,11 +41,11 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('access-worker', function ($user) {
-            return $user->isWorker() || $user->isAdmin();
+            return $user->hasAnyRole(['worker', 'admin']);
         });
 
         Gate::define('access-dashboard', function ($user) {
-            return $user->isAdmin() || $user->isWorker();
+            return $user->hasAnyRole(['admin', 'worker']);
         });
 
         Gate::define('manage-users', function ($user) {
@@ -60,7 +61,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('view-statistics', function ($user) {
-            return $user->isAdmin() || $user->isWorker();
+            return $user->hasAnyRole(['admin', 'worker']);
         });
 
         Gate::define('export-data', function ($user) {
@@ -73,7 +74,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Super admin can do everything
         Gate::before(function ($user, $ability) {
-            if ($user->isAdmin()) {
+            if ($user && $user->isAdmin()) {
                 return true;
             }
         });

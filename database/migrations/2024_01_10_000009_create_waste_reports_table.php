@@ -13,20 +13,19 @@ return new class extends Migration
     {
         Schema::create('waste_reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('site_id')->nullable();
-            $table->enum('waste_type', ['plastic', 'paper', 'glass', 'organic', 'other'])->default('other');
-            $table->enum('severity', ['low', 'medium', 'high'])->default('medium');
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
-            $table->unsignedBigInteger('assigned_worker_id')->nullable();
+            $table->string('title');
+            $table->text('description');
+            $table->string('type'); // general, recyclable, hazardous, organic
+            $table->string('urgency_level'); // low, medium, high
+            $table->string('status')->default('pending'); // pending, in_progress, completed
+            $table->foreignId('site_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('worker_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->integer('estimated_size')->nullable(); // in cubic meters
+            $table->string('location_details')->nullable();
+            $table->string('image_url')->nullable();
             $table->timestamps();
-
-            // Foreign key relationships
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('site_id')->references('id')->on('sites')->onDelete('set null');
-            $table->foreign('assigned_worker_id')->references('id')->on('users')->onDelete('set null');
+            $table->softDeletes();
         });
     }
 

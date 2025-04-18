@@ -13,17 +13,19 @@ class SitePolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        return true; // All authenticated users can view sites
+        // Allow all users (including guests) to view sites
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Site $site): bool
+    public function view(?User $user, Site $site): bool
     {
-        return true; // All authenticated users can view individual sites
+        // Allow all users (including guests) to view individual sites
+        return true;
     }
 
     /**
@@ -68,15 +70,15 @@ class SitePolicy
     public function viewStatistics(User $user, Site $site): bool
     {
         // Admins and workers can view site statistics
-        return $user->isAdmin() || $user->isWorker();
+        return $user->hasAnyRole(['admin', 'worker']);
     }
 
     /**
      * Determine whether the user can view site reports.
      */
-    public function viewReports(User $user, Site $site): bool
+    public function viewReports(?User $user, Site $site): bool
     {
-        // All authenticated users can view site reports
+        // Allow all users (including guests) to view site reports
         return true;
     }
 
@@ -92,9 +94,9 @@ class SitePolicy
     /**
      * Determine whether the user can view the site's location on map.
      */
-    public function viewMap(User $user, Site $site): bool
+    public function viewMap(?User $user, Site $site): bool
     {
-        // All authenticated users can view site locations on map
+        // Allow all users (including guests) to view site locations on map
         return true;
     }
 
@@ -104,7 +106,7 @@ class SitePolicy
     public function viewHistory(User $user, Site $site): bool
     {
         // Admins and workers can view site history
-        return $user->isAdmin() || $user->isWorker();
+        return $user->hasAnyRole(['admin', 'worker']);
     }
 
     /**

@@ -18,6 +18,7 @@ class Site extends Model
      */
     protected $fillable = [
         'name',
+        'address',
         'latitude',
         'longitude',
     ];

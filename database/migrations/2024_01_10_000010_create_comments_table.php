@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('waste_report_id');
-            $table->text('content');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('waste_report_id')->constrained()->onDelete('cascade');
+            $table->text('text');
             $table->timestamps();
-
-            // Foreign key relationships
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('waste_report_id')->references('id')->on('waste_reports')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 

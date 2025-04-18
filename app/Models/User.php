@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Traits\ManagesNotifications;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, ManagesNotifications;
 
     /**
      * The attributes that are mass assignable.
@@ -44,6 +45,17 @@ class User extends Authenticatable
     ];
 
     /**
+     * Valid user roles.
+     *
+     * @var array<string>
+     */
+    public const ROLES = [
+        'admin',
+        'worker',
+        'user',
+    ];
+
+    /**
      * Get the user's notification preferences.
      */
     public function notificationPreferences()
@@ -76,46 +88,47 @@ class User extends Authenticatable
     }
 
     /**
-     * Valid user roles.
-     *
-     * @var array<string>
-     */
-    public const ROLES = [
-        'admin',
-        'worker',
-        'user',
-    ];
-
-    /**
      * Check if the user has a specific role.
+     *
+     * @param string $role
+     * @return bool
      */
-    public function hasRole($role)
+    public function hasRole(string $role): bool
     {
-        return $this->role === $role;
+        if ($this->role === null) {
+            return false;
+        }
+        return strtolower(trim($this->role)) === strtolower(trim($role));
     }
 
     /**
      * Check if the user is an admin.
+     *
+     * @return bool
      */
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->hasRole('admin');
     }
 
     /**
      * Check if the user is a worker.
+     *
+     * @return bool
      */
     public function isWorker(): bool
     {
-        return $this->role === 'worker';
+        return $this->hasRole('worker');
     }
 
     /**
      * Check if the user is a regular user.
+     *
+     * @return bool
      */
     public function isUser(): bool
     {
-        return $this->role === 'user';
+        return $this->hasRole('user');
     }
 
     /**
@@ -140,5 +153,48 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Check if the user has any of the given roles.
+     *
+     * @param array|string $roles
+     * @return bool
+     */
+    public function hasAnyRole($roles): bool
+    {
+        if (!is_array($roles)) {
+            $roles = [$roles];
+        }
+
+        foreach ($roles as $role) {
+            if ($this->hasRole($role)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the role attribute.
+     *
+     * @param string|null $value
+     * @return string|null
+     */
+    public function getRoleAttribute(?string $value): ?string
+    {
+        return $value ? strtolower(trim($value)) : null;
+    }
+
+    /**
+     * Set the role attribute.
+     *
+     * @param string|null $value
+     * @return void
+     */
+    public function setRoleAttribute(?string $value): void
+    {
+        $this->attributes['role'] = $value ? strtolower(trim($value)) : null;
     }
 }

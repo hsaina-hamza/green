@@ -13,11 +13,9 @@ class SiteController extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function __construct()
-    {
-        $this->authorizeResource(Site::class, 'site');
-    }
-
+    /**
+     * Display a listing of the sites.
+     */
     public function index()
     {
         $sites = Site::withCount(['wasteReports', 'garbageSchedules'])
@@ -27,68 +25,9 @@ class SiteController extends BaseController
         return view('sites.index', compact('sites'));
     }
 
-    public function create()
-    {
-        return view('sites.create');
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-        ]);
-
-        $site = Site::create($validated);
-
-        return redirect()->route('sites.show', $site)
-            ->with('success', 'Site created successfully.');
-    }
-
-    public function show(Site $site)
-    {
-        $site->load([
-            'wasteReports' => function ($query) {
-                $query->latest()->take(5);
-            },
-            'garbageSchedules' => function ($query) {
-                $query->upcoming()->take(5);
-            }
-        ]);
-
-        return view('sites.show', compact('site'));
-    }
-
-    public function edit(Site $site)
-    {
-        return view('sites.edit', compact('site'));
-    }
-
-    public function update(Request $request, Site $site)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-        ]);
-
-        $site->update($validated);
-
-        return redirect()->route('sites.show', $site)
-            ->with('success', 'Site updated successfully.');
-    }
-
-    public function destroy(Site $site)
-    {
-        $site->delete();
-
-        return redirect()->route('sites.index')
-            ->with('success', 'Site deleted successfully.');
-    }
-
+    /**
+     * Display the map view of all sites.
+     */
     public function map()
     {
         $sites = Site::withCount(['wasteReports', 'garbageSchedules'])
@@ -113,5 +52,93 @@ class SiteController extends BaseController
             });
 
         return view('sites.map', compact('sites'));
+    }
+
+    /**
+     * Show the form for creating a new site.
+     */
+    public function create()
+    {
+        $this->authorize('create', Site::class);
+        return view('sites.create');
+    }
+
+    /**
+     * Store a newly created site in storage.
+     */
+    public function store(Request $request)
+    {
+        $this->authorize('create', Site::class);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+        ]);
+
+        $site = Site::create($validated);
+
+        return redirect()->route('sites.show', $site)
+            ->with('success', 'Site created successfully.');
+    }
+
+    /**
+     * Display the specified site.
+     */
+    public function show(Site $site)
+    {
+        $site->load([
+            'wasteReports' => function ($query) {
+                $query->latest()->take(5);
+            },
+            'garbageSchedules' => function ($query) {
+                $query->upcoming()->take(5);
+            }
+        ]);
+
+        return view('sites.show', compact('site'));
+    }
+
+    /**
+     * Show the form for editing the specified site.
+     */
+    public function edit(Site $site)
+    {
+        $this->authorize('update', $site);
+        return view('sites.edit', compact('site'));
+    }
+
+    /**
+     * Update the specified site in storage.
+     */
+    public function update(Request $request, Site $site)
+    {
+        $this->authorize('update', $site);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+        ]);
+
+        $site->update($validated);
+
+        return redirect()->route('sites.show', $site)
+            ->with('success', 'Site updated successfully.');
+    }
+
+    /**
+     * Remove the specified site from storage.
+     */
+    public function destroy(Site $site)
+    {
+        $this->authorize('delete', $site);
+
+        $site->delete();
+
+        return redirect()->route('sites.index')
+            ->with('success', 'Site deleted successfully.');
     }
 }
