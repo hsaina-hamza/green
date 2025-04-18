@@ -13,10 +13,10 @@ class CheckRole
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  ...$roles
+     * @param  string  $roles
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, ...$roles): Response
+    public function handle(Request $request, Closure $next, string $roles): Response
     {
         if (!$request->user()) {
             return redirect()->route('login');
@@ -27,7 +27,10 @@ class CheckRole
             return $next($request);
         }
 
-        foreach ($roles as $role) {
+        // Split comma-separated roles
+        $roleArray = array_map('trim', explode(',', $roles));
+
+        foreach ($roleArray as $role) {
             $methodName = 'is' . ucfirst($role);
             if (method_exists($request->user(), $methodName) && $request->user()->$methodName()) {
                 return $next($request);

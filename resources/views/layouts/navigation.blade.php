@@ -28,11 +28,11 @@
                         {{ __('Schedules') }}
                     </x-nav-link>
 
-                    @can('access-admin')
+                    @if(Auth::user()->isAdmin() || Auth::user()->isWorker())
                         <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
                             {{ __('Statistics') }}
                         </x-nav-link>
-                    @endcan
+                    @endif
                 </div>
             </div>
 
@@ -103,11 +103,11 @@
                 {{ __('Schedules') }}
             </x-responsive-nav-link>
 
-            @can('access-admin')
+            @if(Auth::user()->isAdmin() || Auth::user()->isWorker())
                 <x-responsive-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
                     {{ __('Statistics') }}
                 </x-responsive-nav-link>
-            @endcan
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
