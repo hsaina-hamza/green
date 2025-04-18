@@ -30,7 +30,7 @@ class GarbageSchedulePolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Site $site): bool
+    public function create(User $user, ?Site $site = null): bool
     {
         // Only admins can create schedules
         return $user->isAdmin();

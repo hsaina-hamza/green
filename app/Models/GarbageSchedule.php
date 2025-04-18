@@ -21,6 +21,8 @@ class GarbageSchedule extends Model
         'site_id',
         'truck_number',
         'scheduled_time',
+        'frequency',
+        'notes',
     ];
 
     /**
@@ -38,6 +40,19 @@ class GarbageSchedule extends Model
      * @var array<string>
      */
     protected $with = ['site'];
+
+    /**
+     * Valid frequency options.
+     *
+     * @var array<string>
+     */
+    public const FREQUENCIES = [
+        'once',
+        'daily',
+        'weekly',
+        'biweekly',
+        'monthly',
+    ];
 
     /**
      * Get the site associated with the schedule.
@@ -115,5 +130,45 @@ class GarbageSchedule extends Model
     public function getHumanScheduleAttribute(): string
     {
         return $this->scheduled_time->diffForHumans();
+    }
+
+    /**
+     * Get the formatted frequency.
+     */
+    public function getFormattedFrequencyAttribute(): string
+    {
+        return ucfirst($this->frequency);
+    }
+
+    /**
+     * Get the next occurrence of this schedule.
+     */
+    public function getNextOccurrenceAttribute(): ?Carbon
+    {
+        if ($this->frequency === 'once') {
+            return null;
+        }
+
+        $lastSchedule = $this->scheduled_time;
+        $now = Carbon::now();
+
+        while ($lastSchedule->isPast()) {
+            switch ($this->frequency) {
+                case 'daily':
+                    $lastSchedule = $lastSchedule->addDay();
+                    break;
+                case 'weekly':
+                    $lastSchedule = $lastSchedule->addWeek();
+                    break;
+                case 'biweekly':
+                    $lastSchedule = $lastSchedule->addWeeks(2);
+                    break;
+                case 'monthly':
+                    $lastSchedule = $lastSchedule->addMonth();
+                    break;
+            }
+        }
+
+        return $lastSchedule;
     }
 }

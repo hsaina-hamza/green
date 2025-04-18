@@ -36,6 +36,7 @@ class SiteController extends BaseController
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
         ]);
@@ -69,6 +70,7 @@ class SiteController extends BaseController
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
         ]);
@@ -89,11 +91,26 @@ class SiteController extends BaseController
 
     public function map()
     {
-        $sites = Site::with([
-            'wasteReports' => function ($query) {
-                $query->where('status', '!=', 'completed');
-            }
-        ])->get();
+        $sites = Site::withCount(['wasteReports', 'garbageSchedules'])
+            ->with(['activeWasteReports', 'upcomingSchedules'])
+            ->get()
+            ->map(function ($site) {
+                return [
+                    'id' => $site->id,
+                    'name' => $site->name,
+                    'address' => $site->address,
+                    'latitude' => (float) $site->latitude,
+                    'longitude' => (float) $site->longitude,
+                    'waste_reports_count' => $site->waste_reports_count,
+                    'garbage_schedules_count' => $site->garbage_schedules_count,
+                    'active_reports_count' => $site->activeWasteReports->count(),
+                    'upcoming_schedules_count' => $site->upcomingSchedules->count(),
+                    'url' => route('sites.show', $site),
+                    'google_maps_url' => $site->google_maps_url,
+                    'has_active_reports' => $site->hasActiveReports(),
+                    'has_upcoming_schedules' => $site->hasUpcomingSchedules(),
+                ];
+            });
 
         return view('sites.map', compact('sites'));
     }
