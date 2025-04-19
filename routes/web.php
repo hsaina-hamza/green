@@ -103,12 +103,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->name('waste-reports.assign');
 });
 
-<<<<<<< HEAD
-require __DIR__.'/auth.php';
-=======
 
 
 require __DIR__.'/auth.php';
 
 Route::get('/waste-map', [WasteReportController::class, 'wasteMap'])->name('waste-map');
->>>>>>> 9c6fd1c (8)
