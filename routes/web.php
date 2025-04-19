@@ -33,12 +33,24 @@ Route::get('/', function () {
         });
     
     return view('welcome', compact('recentReports'));
-});
+})->name('home');
 
 // Public Information Routes
 Route::get('/conservation-tips', [DashboardController::class, 'conservationTips'])->name('conservation.tips');
 Route::get('/waste-map', [WasteReportController::class, 'wasteMap'])->name('waste-map');
-Route::get('/bus-times', [BusTimesController::class, 'index'])->name('bus-times');
+// Bus Times Routes
+Route::get('/bus-times', [BusTimesController::class, 'index'])->name('bus-times.index');
+
+// Protected Bus Times Management Routes
+Route::middleware(['auth', 'role:worker,admin'])->group(function () {
+    Route::get('/bus-times/manage', [BusTimesController::class, 'manage'])->name('bus-times.manage');
+    Route::get('/bus-times/create', [BusTimesController::class, 'create'])->name('bus-times.create');
+    Route::post('/bus-times', [BusTimesController::class, 'store'])->name('bus-times.store');
+    Route::get('/bus-times/{busSchedule}/edit', [BusTimesController::class, 'edit'])->name('bus-times.edit');
+    Route::put('/bus-times/{busSchedule}', [BusTimesController::class, 'update'])->name('bus-times.update');
+    Route::delete('/bus-times/{busSchedule}', [BusTimesController::class, 'destroy'])->name('bus-times.destroy');
+    Route::patch('/bus-times/{busSchedule}/toggle-status', [BusTimesController::class, 'toggleStatus'])->name('bus-times.toggle-status');
+});
 
 // Public Site Routes
 Route::get('/sites', [SiteController::class, 'index'])->name('sites.index');
@@ -86,7 +98,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 // Routes that require worker or admin role
-Route::middleware(['auth', 'role:worker|admin'])->group(function () {
+Route::middleware(['auth', 'role:worker,admin'])->group(function () {
     Route::get('/statistics', [DashboardController::class, 'statistics'])->name('statistics');
     Route::patch('/waste-reports/{waste_report}/status', [WasteReportController::class, 'updateStatus'])
         ->name('waste-reports.update-status');

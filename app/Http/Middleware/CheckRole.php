@@ -30,8 +30,8 @@ class CheckRole
         }
 
         try {
-            // Split the roles string into an array, handling both pipe and comma separators
-            $rolesArray = array_map('trim', preg_split('/[,|]/', $roles));
+            // Split the roles string into an array
+            $rolesArray = array_map('trim', explode(',', $roles));
 
             // Check if user has any of the required roles
             if ($request->user()->hasAnyRole($rolesArray)) {
