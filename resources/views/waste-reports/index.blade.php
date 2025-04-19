@@ -22,11 +22,11 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    @if($reports->isEmpty())
+                    @if($wasteReports->isEmpty())
                         <div class="text-center py-8">
                             <i class="fas fa-clipboard text-4xl text-gray-400 mb-4"></i>
                             <p class="text-gray-500">No waste reports found.</p>
-                            @can('create', App\Models\WasteReport::class)
+                            @can('create', WasteReport::class)
                                 <a href="{{ route('waste-reports.create') }}" class="text-green-600 hover:text-green-700 mt-2 inline-block">
                                     Create your first report
                                 </a>
@@ -61,7 +61,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach($reports as $report)
+                                    @foreach($wasteReports as $report)
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="text-sm font-medium text-gray-900">
@@ -117,7 +117,7 @@
                             </table>
                         </div>
                         <div class="mt-4">
-                            {{ $reports->links() }}
+                            {{ $wasteReports->links() }}
                         </div>
                     @endif
                 </div>
