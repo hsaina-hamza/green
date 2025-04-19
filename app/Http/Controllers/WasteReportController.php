@@ -157,4 +157,16 @@ class WasteReportController extends Controller
         return redirect()->route('waste-reports.show', $wasteReport)
             ->with('success', 'Worker assigned successfully.');
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * Display the waste map with all waste reports.
+     */
+    public function wasteMap()
+    {
+        $wasteReports = \App\Models\WasteReport::all();
+        return view('waste-map', compact('wasteReports'));
+    }
+>>>>>>> 9c6fd1c (8)
 }
