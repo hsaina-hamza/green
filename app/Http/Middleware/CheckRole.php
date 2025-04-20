@@ -17,6 +17,7 @@ class CheckRole
      * @param  string|null  $roles
      * @return mixed
      */
+    
     public function handle(Request $request, Closure $next, ?string $roles = null): Response
     {
         if (!$request->user()) {

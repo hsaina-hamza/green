@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
+
 // Routes that require worker or admin role
 Route::middleware(['auth', 'role:worker|admin'])->group(function () {
     Route::get('/statistics', [DashboardController::class, 'statistics'])->name('statistics');

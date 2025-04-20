@@ -1,35 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h2 class="text-xl font-semibold mb-4">Waste Map</h2>
+<div class="container mx-auto px-4">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">🗺️ Waste Map</h2>
 
-    <!-- Map container -->
-    <div id="map" style="height: 500px;"></div>
+    <div class="rounded-xl shadow-md border border-gray-200 overflow-hidden">
+        <!-- Map container -->
+        <div id="map" class="w-full h-[500px]"></div>
+    </div>
 </div>
+@endsection
+
+@push('styles')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<style>
+    #map {
+        width: 100%;
+        height: 500px;
+        border-radius: 12px;
+    }
+
+    .leaflet-popup-content {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+</style>
+@endpush
 
 @push('scripts')
+<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
 <script>
     // Initialize the map
-    var map = L.map('map').setView([36.7783, -119.4179], 6); // Default to a central location
+    var map = L.map('map').setView([36.7783, -119.4179], 6);
 
-    // Set up the tile layer (this is a free open-source option)
+    // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Loop through all waste reports and add markers
+    // Add markers for each report
     @foreach($wasteReports as $report)
         var marker = L.marker([{{ $report->latitude }}, {{ $report->longitude }}]).addTo(map);
-
-        // Set a popup with report details
         marker.bindPopup(`
-            <strong>Waste Type:</strong> {{ $report->type }} <br>
-            <strong>Status:</strong> {{ $report->status }} <br>
-            <strong>Location:</strong> ({{ $report->latitude }}, {{ $report->longitude }})
+            <div class="popup-content">
+                <strong>Waste Type:</strong> {{ $report->type }} <br>
+                <strong>Status:</strong> {{ $report->status }} <br>
+                <strong>Coordinates:</strong> ({{ $report->latitude }}, {{ $report->longitude }})
+            </div>
         `);
     @endforeach
 </script>
 @endpush
-@endsection

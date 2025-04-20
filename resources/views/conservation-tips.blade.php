@@ -5,16 +5,18 @@
         </h2>
     </x-slot>
 
-   <div class="mt-10 bg-blue-50 p-6 rounded-lg border border-blue-200">
-                <h2 class="text-xl font-bold mb-4 text-blue-700">Scheduling Tips</h2>
-                <p class="mb-4 text-lg leading-relaxed text-gray-700">Here are some best practices for managing truck schedules efficiently:</p>
-                <ul class="list-disc list-inside space-y-2 text-gray-800">
-                    <li><span class="font-semibold">Plan ahead</span> to optimize routes and reduce fuel consumption.</li>
-                    <li><span class="font-semibold">Schedule during off-peak hours</span> to avoid traffic congestion when possible.</li>
-                    <li><span class="font-semibold">Maintain consistent weekly schedules</span> to improve operational efficiency.</li>
-                    <li><span class="font-semibold">Allow buffer time</span> between deliveries to account for unexpected delays.</li>
-                    <li><span class="font-semibold">Consider location proximity</span> when scheduling multiple deliveries on the same day.</li>
-                    <li><span class="font-semibold">Regularly review and optimize</span> schedules based on historical performance data.</li>
-                </ul>
-            </div>
+    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900">
+            <h1 class="text-3xl font-extrabold mb-6 text-green-700 border-b-4 border-green-300 pb-2">Conservation Tips</h1>
+            <p class="mb-6 text-lg leading-relaxed text-gray-700">Here are some practical tips to help conserve the environment and reduce waste in your daily life:</p>
+            <ul class="list-disc list-inside space-y-3 text-gray-800 text-lg">
+                <li><span class="font-semibold">Reduce, reuse, and recycle</span> whenever possible to minimize waste.</li>
+                <li><span class="font-semibold">Compost organic waste</span> to reduce landfill use and enrich soil.</li>
+                <li><span class="font-semibold">Use energy-efficient appliances and lighting</span> to save energy and reduce carbon footprint.</li>
+                <li><span class="font-semibold">Conserve water</span> by fixing leaks and using water-saving fixtures.</li>
+                <li><span class="font-semibold">Participate in local clean-up events</span> and community recycling programs.</li>
+                <li><span class="font-semibold">Educate others</span> about the importance of environmental conservation.</li>
+            </ul>
+        </div>
+    </div>
 </x-app-layout>
