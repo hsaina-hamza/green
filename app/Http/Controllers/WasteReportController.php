@@ -40,7 +40,7 @@ class WasteReportController extends Controller
     public function create()
     {
         $sites = Site::all();
-        return view('waste-reports.multi-step-create', compact('sites'));
+        return view('waste-reports.create', compact('sites'));
     }
 
     /**

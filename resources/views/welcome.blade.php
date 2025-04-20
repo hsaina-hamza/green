@@ -20,7 +20,7 @@
                     <li><a href="{{ url('/conservation-tips') }}" class="hover:underline">Conservation Tips</a></li>
                     <li><a href="{{ url('/waste-map') }}" class="hover:underline">Waste Map</a></li>
                     <li><a href="{{ url('/bus-times') }}" class="hover:underline">Bus Times</a></li>
-                    <li><a href="{{ url('/report-waste') }}" class="hover:underline">Report Waste</a></li>
+                    <li><a href="{{ route('waste-reports.create') }}" class="hover:underline">Report Waste</a></li>
                     @if (Route::has('login'))
                         @auth
                             <li><a href="{{ url('/dashboard') }}" class="hover:underline">Dashboard</a></li>
@@ -38,7 +38,12 @@
             <h2 class="text-3xl font-bold mb-4">Together for a Cleaner Environment</h2>
             <p class="mb-8">Join our community effort to conserve the environment, report waste sites, and make a positive impact on our planet for future generations.</p>
             <div>
-                <a href="{{ url('/report-waste') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2">Report Waste Site</a>
+                @auth
+                    <a href="{{ route('waste-reports.create') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2">Report Waste Site</a>
+                @else
+                    <a href="{{ route('login') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2" 
+                       onclick="alert('Please log in to report a waste site.')">Report Waste Site</a>
+                @endauth
                 <a href="{{ url('/conservation-tips') }}" class="bg-transparent hover:bg-green-600 text-green-600 hover:text-white px-4 py-2 rounded border border-green-600">Conservation Tips</a>
             </div>
         </div>
@@ -52,7 +57,12 @@
                     <i class="fas fa-trash-alt text-4xl text-green-600 mb-4"></i>
                     <h3 class="text-lg font-semibold">Report Waste</h3>
                     <p class="text-sm">Report illegal waste sites with photos and location data to help clean up our community.</p>
-                    <a href="{{ url('/report-waste') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Report Now</a>
+                    @auth
+                        <a href="{{ route('waste-reports.create') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Report Now</a>
+                    @else
+                        <a href="{{ route('login') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                           onclick="alert('Please log in to report a waste site.')">Report Now</a>
+                    @endauth
                 </div>
                 <div class="bg-white p-6 rounded shadow text-center">
                     <i class="fas fa-map-marked-alt text-4xl text-green-600 mb-4"></i>
@@ -137,7 +147,7 @@
                 <div>
                     <h5 class="text-lg font-semibold">Services</h5>
                     <ul class="mt-2 space-y-2">
-                        <li><a href="{{ url('/report-waste') }}" class="hover:underline">Report Waste</a></li>
+                        <li><a href="{{ route('waste-reports.create') }}" class="hover:underline">Report Waste</a></li>
                         @if (Route::has('register'))
                             <li><a href="{{ route('register') }}" class="hover:underline">Create Account</a></li>
                         @endif

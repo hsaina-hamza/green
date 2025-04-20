@@ -14,6 +14,8 @@ use App\Http\Controllers\ProfileController;
 |--------------------------------------------------------------------------
 */
 
+use App\Http\Controllers\BusTimesController;
+
 // Public routes (no authentication required)
 Route::get('/', function () {
     $recentReports = \App\Models\WasteReport::with('site')
@@ -32,6 +34,11 @@ Route::get('/', function () {
     
     return view('welcome', compact('recentReports'));
 });
+
+// Public Information Routes
+Route::get('/conservation-tips', [DashboardController::class, 'conservationTips'])->name('conservation.tips');
+Route::get('/waste-map', [WasteReportController::class, 'wasteMap'])->name('waste-map');
+Route::get('/bus-times', [BusTimesController::class, 'index'])->name('bus-times');
 
 // Public Site Routes
 Route::get('/sites', [SiteController::class, 'index'])->name('sites.index');
@@ -109,9 +116,3 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
 require __DIR__.'/auth.php';
-
-Route::get('/waste-map', [WasteReportController::class, 'wasteMap'])->name('waste-map');
-
-Route::get('/conservation-tips', [\App\Http\Controllers\DashboardController::class, 'conservationTips'])->name('conservation.tips');
-
-Route::resource('waste-reports', WasteReportController::class)->middleware('auth');

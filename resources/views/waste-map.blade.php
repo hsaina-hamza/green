@@ -1,15 +1,23 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Waste Map') }} 🗺️
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="container mx-auto px-4">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">🗺️ Waste Map</h2>
-
-    <div class="rounded-xl shadow-md border border-gray-200 overflow-hidden">
-        <!-- Map container -->
-        <div id="map" class="w-full h-[500px]"></div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <div class="rounded-xl border border-gray-200 overflow-hidden">
+                        <!-- Map container -->
+                        <div id="map" class="w-full h-[500px]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-@endsection
+</x-app-layout>
 
 @push('styles')
 <!-- Leaflet CSS -->
