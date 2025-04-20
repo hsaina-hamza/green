@@ -75,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('comments.destroy');
 });
 
+
+
 // Routes that require worker or admin role
 Route::middleware(['auth', 'role:worker|admin'])->group(function () {
     Route::get('/statistics', [DashboardController::class, 'statistics'])->name('statistics');
@@ -108,3 +110,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 require __DIR__.'/auth.php';
 
 Route::get('/waste-map', [WasteReportController::class, 'wasteMap'])->name('waste-map');
+
+Route::get('/conservation-tips', [\App\Http\Controllers\DashboardController::class, 'conservationTips'])->name('conservation.tips');
+
+Route::resource('waste-reports', WasteReportController::class)->middleware('auth');

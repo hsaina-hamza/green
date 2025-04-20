@@ -12,7 +12,7 @@
     <header class="bg-green-600 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
             <div>
-                <h1 class="text-2xl font-bold">GreenMorocco</h1>
+                <h1 class="text-2xl font-bold">GM</h1>
             </div>
             <nav>
                 <ul class="flex space-x-4">

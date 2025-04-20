@@ -73,9 +73,9 @@ class WasteReportService extends BaseService
             throw new \InvalidArgumentException('User must be a worker');
         }
 
-        return $this->executeInTransaction(function () use ($report, $worker) {
+            return $this->executeInTransaction(function () use ($report, $worker) {
             $updated = $this->update($report, [
-                'assigned_worker_id' => $worker->id,
+                'worker_id' => $worker->id,
                 'status' => 'in_progress'
             ]);
 
@@ -129,7 +129,7 @@ class WasteReportService extends BaseService
     {
         return $this->getPaginated(
             WasteReport::class,
-            ['assigned_worker_id' => $worker->id],
+            ['worker_id' => $worker->id],
             ['user', 'site'],
             $perPage
         );

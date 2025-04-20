@@ -38,7 +38,17 @@ class CommentPolicy
         }
 
         // Workers can comment on reports assigned to them
+        if ($user->isWorker() && $wasteReport->worker_id === $user->id) {
+            return true;
+        }
+<<<<<<< SEARCH
+        // Workers can view comment history of reports assigned to them
         if ($user->isWorker() && $wasteReport->assigned_worker_id === $user->id) {
+            return true;
+        }
+=======
+        // Workers can view comment history of reports assigned to them
+        if ($user->isWorker() && $wasteReport->worker_id === $user->id) {
             return true;
         }
 

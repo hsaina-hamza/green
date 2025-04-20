@@ -206,7 +206,7 @@ class DashboardService extends BaseService
             return 'completed';
         }
 
-        if ($report->assigned_worker_id) {
+        if ($report->worker_id) {
             return 'assigned';
         }
 

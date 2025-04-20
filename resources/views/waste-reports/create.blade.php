@@ -1,84 +1,52 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Waste Report') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form action="{{ route('waste-reports.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                        @csrf
+@section('content')
+<div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4 text-gray-700">Report a Waste Site</h2>
 
-                        <div>
-                            <x-input-label for="site_id" :value="__('Site')" />
-                            <select id="site_id" name="site_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <option value="">Select a site</option>
-                                @foreach($sites as $site)
-                                    <option value="{{ $site->id }}" {{ old('site_id') == $site->id ? 'selected' : '' }}>
-                                        {{ $site->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <x-input-error :messages="$errors->get('site_id')" class="mt-2" />
-                        </div>
+    <form action="{{ route('waste-reports.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
 
-                        <div>
-                            <x-input-label for="waste_type" :value="__('Waste Type')" />
-                            <select id="waste_type" name="waste_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <option value="">Select waste type</option>
-                                @foreach(['household', 'construction', 'green_waste', 'electronic', 'hazardous', 'recyclable'] as $type)
-                                    <option value="{{ $type }}" {{ old('waste_type') == $type ? 'selected' : '' }}>
-                                        {{ ucfirst(str_replace('_', ' ', $type)) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <x-input-error :messages="$errors->get('waste_type')" class="mt-2" />
-                        </div>
-
-                        <div>
-                            <x-input-label for="description" :value="__('Description')" />
-                            <textarea
-                                id="description"
-                                name="description"
-                                rows="4"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500"
-                                placeholder="Describe the waste situation..."
-                            >{{ old('description') }}</textarea>
-                            <x-input-error :messages="$errors->get('description')" class="mt-2" />
-                        </div>
-
-                        <div>
-                            <x-input-label for="image" :value="__('Image')" />
-                            <input
-                                type="file"
-                                id="image"
-                                name="image"
-                                accept="image/*"
-                                class="mt-1 block w-full text-sm text-gray-500
-                                    file:mr-4 file:py-2 file:px-4
-                                    file:rounded-md file:border-0
-                                    file:text-sm file:font-semibold
-                                    file:bg-green-50 file:text-green-700
-                                    hover:file:bg-green-100"
-                            />
-                            <p class="mt-1 text-sm text-gray-500">
-                                Upload a photo of the waste site (max 2MB)
-                            </p>
-                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
-                        </div>
-
-                        <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Create Report') }}</x-primary-button>
-                            <a href="{{ route('waste-reports.index') }}" class="text-gray-600 hover:text-gray-900">
-                                {{ __('Cancel') }}
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        {{-- Waste Type --}}
+        <div class="mb-4">
+            <label for="waste_type" class="block text-sm font-medium text-gray-700">Waste Type</label>
+            <select name="waste_type" id="waste_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <option value="plastic">Plastic</option>
+                <option value="paper">Paper</option>
+                <option value="glass">Glass</option>
+                <option value="organic">Organic</option>
+                <option value="other">Other</option>
+            </select>
         </div>
-    </div>
-</x-app-layout>
+
+        {{-- Severity --}}
+        <div class="mb-4">
+            <label for="severity" class="block text-sm font-medium text-gray-700">Severity</label>
+            <select name="severity" id="severity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+
+        {{-- Description --}}
+        <div class="mb-4">
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea name="description" id="description" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+        </div>
+
+        {{-- Image --}}
+        <div class="mb-4">
+            <label for="image" class="block text-sm font-medium text-gray-700">Image (Optional)</label>
+            <input type="file" name="image" id="image" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+        </div>
+
+        {{-- Submit Button --}}
+        <div class="mt-6">
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                Submit Report
+            </button>
+        </div>
+    </form>
+</div>
+@endsection

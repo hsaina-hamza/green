@@ -84,7 +84,7 @@ class NotificationService extends BaseService
      */
     public function sendUnassignedReportsReminder(): void
     {
-        $unassignedReports = WasteReport::whereNull('assigned_worker_id')
+        $unassignedReports = WasteReport::whereNull('worker_id')
             ->where('created_at', '<=', now()->subHours(24))
             ->get();
 
@@ -192,9 +192,9 @@ class NotificationService extends BaseService
             ->where('created_at', '>=', Carbon::yesterday())
             ->where('status', '!=', 'completed');
 
-        if ($user->role === 'worker') {
+            if ($user->role === 'worker') {
             $query->where(function ($q) use ($user) {
-                $q->where('assigned_worker_id', $user->id)
+                $q->where('worker_id', $user->id)
                     ->orWhereHas('site', function ($q) use ($user) {
                         $q->whereHas('workers', function ($q) use ($user) {
                             $q->where('users.id', $user->id);

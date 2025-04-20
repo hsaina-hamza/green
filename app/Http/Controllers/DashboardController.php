@@ -36,7 +36,7 @@ class DashboardController extends BaseController
         ];
 
         if ($user->isWorker()) {
-            $stats['my_assigned_reports'] = WasteReport::where('assigned_worker_id', $user->id)
+            $stats['my_assigned_reports'] = WasteReport::where('worker_id', $user->id)
                 ->whereIn('status', ['pending', 'in_progress'])
                 ->count();
         }
@@ -56,7 +56,7 @@ class DashboardController extends BaseController
         $query = WasteReport::with(['user', 'site', 'assignedWorker']);
 
         if ($user->isWorker()) {
-            $query->where('assigned_worker_id', $user->id);
+            $query->where('worker_id', $user->id);
         } elseif ($user->isUser()) {
             $query->where('user_id', $user->id);
         }
@@ -90,5 +90,10 @@ class DashboardController extends BaseController
             ->get();
 
         return view('statistics', compact('monthlyStats', 'siteStats'));
+    }
+
+    public function conservationTips()
+    {
+        return view('conservation-tips');
     }
 }

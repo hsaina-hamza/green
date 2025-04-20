@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\CheckRole::class,
     ];
 
+    
     /**
      * The priority-sorted list of middleware.
      *

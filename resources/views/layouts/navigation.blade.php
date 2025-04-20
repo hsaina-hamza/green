@@ -12,48 +12,60 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Home') }}
+                </x-nav-link>
+
+                <x-nav-link :href="route('conservation.tips')" :active="request()->routeIs('conservation.tips')">
+                    {{ __('Conservation Tips') }}
+                </x-nav-link>
+
+                <x-nav-link :href="route('waste-map')" :active="request()->routeIs('waste-map')">
+                    {{ __('Waste Map') }}
+                </x-nav-link>
+
+                {{-- <x-nav-link :href="route('bus-times')" :active="request()->routeIs('bus-times')">
+                    {{ __('Bus Times') }}
+                </x-nav-link> --}}
+
+                <x-nav-link :href="route('waste-reports.create')" :active="request()->routeIs('waste-reports.create')">
+                    {{ __('Report Waste') }}
+                </x-nav-link>
+
+                <!-- Sites Dropdown -->
+                <div class="hidden sm:flex sm:items-center">
+                    <x-dropdown align="left" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 {{ request()->routeIs('sites.*') ? 'border-b-2 border-indigo-400' : '' }}">
+                                <div>{{ __('Sites') }}</div>
+                                <div class="ml-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('sites.index')">
+                                {{ __('List View') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('sites.map')">
+                                {{ __('Map View') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
+                <x-nav-link :href="route('schedules.index')" :active="request()->routeIs('schedules.*')">
+                    {{ __('Bus Times') }}
+                </x-nav-link>
+
+                @if(Auth::check() && (Auth::user()->isAdmin() || Auth::user()->isWorker()))
+                    <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
+                        {{ __('Statistics') }}
                     </x-nav-link>
-
-                    <x-nav-link :href="route('waste-reports.index')" :active="request()->routeIs('waste-reports.*')">
-                        {{ __('Waste Reports') }}
-                    </x-nav-link>
-
-                    <!-- Sites Dropdown -->
-                    <div class="hidden sm:flex sm:items-center">
-                        <x-dropdown align="left" width="48">
-                            <x-slot name="trigger">
-                                <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 {{ request()->routeIs('sites.*') ? 'border-b-2 border-indigo-400' : '' }}">
-                                    <div>{{ __('Sites') }}</div>
-                                    <div class="ml-1">
-                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </x-slot>
-
-                            <x-slot name="content">
-                                <x-dropdown-link :href="route('sites.index')">
-                                    {{ __('List View') }}
-                                </x-dropdown-link>
-                                <x-dropdown-link :href="route('sites.map')">
-                                    {{ __('Map View') }}
-                                </x-dropdown-link>
-                            </x-slot>
-                        </x-dropdown>
-                    </div>
-
-                    <x-nav-link :href="route('schedules.index')" :active="request()->routeIs('schedules.*')">
-                        {{ __('Schedules') }}
-                    </x-nav-link>
-
-                    @if(Auth::user()->isAdmin() || Auth::user()->isWorker())
-                        <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
-                            {{ __('Statistics') }}
-                        </x-nav-link>
-                    @endif
+                @endif
                 </div>
             </div>
 
@@ -63,7 +75,7 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->name }}</div>
+                                <div>{{ Auth::check() ? Auth::user()->name : 'Guest' }}</div>
 
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
