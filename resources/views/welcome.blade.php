@@ -19,7 +19,7 @@
                     <li><a href="{{ url('/') }}" class="hover:underline">Home</a></li>
                     <li><a href="{{ url('/conservation-tips') }}" class="hover:underline">Conservation Tips</a></li>
                     <li><a href="{{ url('/waste-map') }}" class="hover:underline">Waste Map</a></li>
-                    <li><a href="{{ url('/bus-times') }}" class="hover:underline">Bus Times</a></li>
+                    <li><a href="{{ route('bus-times.index') }}" class="hover:underline">Bus Times</a></li>
                     <li><a href="{{ route('waste-reports.create') }}" class="hover:underline">Report Waste</a></li>
                     @if (Route::has('login'))
                         @auth
@@ -74,7 +74,7 @@
                     <i class="fas fa-bus text-4xl text-green-600 mb-4"></i>
                     <h3 class="text-lg font-semibold">Bus Times</h3>
                     <p class="text-sm">Check local bus schedules to reduce your carbon footprint with public transport.</p>
-                    <a href="{{ url('/bus-times') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View Schedule</a>
+                    <a href="{{ route('bus-times.index') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View Schedule</a>
                 </div>
                 <div class="bg-white p-6 rounded shadow text-center">
                     <i class="fas fa-leaf text-4xl text-green-600 mb-4"></i>
@@ -141,7 +141,7 @@
                         <li><a href="{{ url('/') }}" class="hover:underline">Home</a></li>
                         <li><a href="{{ url('/conservation-tips') }}" class="hover:underline">Conservation Tips</a></li>
                         <li><a href="{{ url('/waste-map') }}" class="hover:underline">Waste Map</a></li>
-                        <li><a href="{{ url('/bus-times') }}" class="hover:underline">Bus Times</a></li>
+                        <li><a href="{{ route('bus-times.index') }}" class="hover:underline">Bus Times</a></li>
                     </ul>
                 </div>
                 <div>

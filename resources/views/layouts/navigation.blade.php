@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Route;
                         {{ __('Waste Map') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('bus-times')" :active="request()->routeIs('bus-times')">
+                    <x-nav-link :href="route('bus-times.index')" :active="request()->routeIs('bus-times.*')">
                         {{ __('Bus Times') }}
                     </x-nav-link>
 
@@ -76,7 +76,7 @@ use Illuminate\Support\Facades\Route;
                         </x-nav-link>
 
                         @if(Auth::user()->isAdmin() || Auth::user()->isWorker())
-                            <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
+                            <x-nav-link :href="route('admin.statistics')" :active="request()->routeIs('admin.statistics')">
                                 {{ __('Statistics') }}
                             </x-nav-link>
                         @endif
@@ -156,7 +156,7 @@ use Illuminate\Support\Facades\Route;
                 {{ __('Waste Map') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('bus-times')" :active="request()->routeIs('bus-times')">
+            <x-responsive-nav-link :href="route('bus-times.index')" :active="request()->routeIs('bus-times.*')">
                 {{ __('Bus Times') }}
             </x-responsive-nav-link>
 
@@ -186,7 +186,7 @@ use Illuminate\Support\Facades\Route;
                 </x-responsive-nav-link>
 
                 @if(Auth::user()->isAdmin() || Auth::user()->isWorker())
-                    <x-responsive-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
+                    <x-responsive-nav-link :href="route('admin.statistics')" :active="request()->routeIs('admin.statistics')">
                         {{ __('Statistics') }}
                     </x-responsive-nav-link>
                 @endif

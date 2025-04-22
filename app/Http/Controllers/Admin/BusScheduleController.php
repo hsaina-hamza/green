@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\BusTime;
+use App\Http\Controllers\Controller;
 use App\Models\Location;
+use App\Models\BusTime;
 use Illuminate\Http\Request;
 
-class BusTimesController extends Controller
+class BusScheduleController extends Controller
 {
     public function index()
     {
-        $busSchedules = BusTime::with('location')->get();
-        $locations = Location::all();
-        return view('bus-times.index', compact('busSchedules', 'locations'));
+        $schedules = BusTime::with('location')->latest()->paginate(10);
+        return view('admin.bus-schedules.index', compact('schedules'));
     }
 
     public function create()
     {
         $locations = Location::all();
-        return view('bus-times.create', compact('locations'));
+        return view('admin.bus-schedules.create', compact('locations'));
     }
 
     public function store(Request $request)
@@ -33,17 +33,17 @@ class BusTimesController extends Controller
 
         BusTime::create($validated);
 
-        return redirect()->route('bus-times.index')
-            ->with('success', 'تم إضافة جدول الحافلة بنجاح');
+        return redirect()->route('admin.bus-schedules.index')
+            ->with('success', 'تم إنشاء جدول الحافلة بنجاح');
     }
 
-    public function edit(BusTime $busTime)
+    public function edit(BusTime $busSchedule)
     {
         $locations = Location::all();
-        return view('bus-times.edit', compact('busTime', 'locations'));
+        return view('admin.bus-schedules.edit', compact('busSchedule', 'locations'));
     }
 
-    public function update(Request $request, BusTime $busTime)
+    public function update(Request $request, BusTime $busSchedule)
     {
         $validated = $request->validate([
             'location_id' => 'required|exists:locations,id',
@@ -53,17 +53,17 @@ class BusTimesController extends Controller
             'frequency' => 'required|string|max:255',
         ]);
 
-        $busTime->update($validated);
+        $busSchedule->update($validated);
 
-        return redirect()->route('bus-times.index')
+        return redirect()->route('admin.bus-schedules.index')
             ->with('success', 'تم تحديث جدول الحافلة بنجاح');
     }
 
-    public function destroy(BusTime $busTime)
+    public function destroy(BusTime $busSchedule)
     {
-        $busTime->delete();
+        $busSchedule->delete();
 
-        return redirect()->route('bus-times.index')
+        return redirect()->route('admin.bus-schedules.index')
             ->with('success', 'تم حذف جدول الحافلة بنجاح');
     }
 }

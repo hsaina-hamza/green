@@ -7,14 +7,15 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\GarbageScheduleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BusTimesController;
+use App\Http\Controllers\Admin\BusScheduleController as AdminBusScheduleController;
+use App\Http\Controllers\Worker\BusScheduleController as WorkerBusScheduleController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 */
-
-use App\Http\Controllers\BusTimesController;
 
 // Public routes (no authentication required)
 Route::get('/', function () {
@@ -38,7 +39,13 @@ Route::get('/', function () {
 // Public Information Routes
 Route::get('/conservation-tips', [DashboardController::class, 'conservationTips'])->name('conservation.tips');
 Route::get('/waste-map', [WasteReportController::class, 'wasteMap'])->name('waste-map');
-Route::get('/bus-times', [BusTimesController::class, 'index'])->name('bus-times');
+// Bus Times Routes
+Route::get('/bus-times', [BusTimesController::class, 'index'])->name('bus-times.index');
+Route::get('/bus-times/create', [BusTimesController::class, 'create'])->name('bus-times.create');
+Route::post('/bus-times', [BusTimesController::class, 'store'])->name('bus-times.store');
+Route::get('/bus-times/{busTime}/edit', [BusTimesController::class, 'edit'])->name('bus-times.edit');
+Route::put('/bus-times/{busTime}', [BusTimesController::class, 'update'])->name('bus-times.update');
+Route::delete('/bus-times/{busTime}', [BusTimesController::class, 'destroy'])->name('bus-times.destroy');
 
 // Public Site Routes
 Route::get('/sites', [SiteController::class, 'index'])->name('sites.index');
@@ -82,37 +89,32 @@ Route::middleware(['auth'])->group(function () {
         ->name('comments.destroy');
 });
 
-
-
-
-// Routes that require worker or admin role
-Route::middleware(['auth', 'role:worker|admin'])->group(function () {
+// Admin routes
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/statistics', [DashboardController::class, 'statistics'])->name('statistics');
-    Route::patch('/waste-reports/{waste_report}/status', [WasteReportController::class, 'updateStatus'])
-        ->name('waste-reports.update-status');
-});
+    
+    // Admin Bus Schedule Routes
+    Route::get('/bus-schedules', [AdminBusScheduleController::class, 'index'])->name('bus-schedules.index');
+    Route::get('/bus-schedules/create', [AdminBusScheduleController::class, 'create'])->name('bus-schedules.create');
+    Route::post('/bus-schedules', [AdminBusScheduleController::class, 'store'])->name('bus-schedules.store');
+    Route::get('/bus-schedules/{busSchedule}/edit', [AdminBusScheduleController::class, 'edit'])->name('bus-schedules.edit');
+    Route::put('/bus-schedules/{busSchedule}', [AdminBusScheduleController::class, 'update'])->name('bus-schedules.update');
+    Route::delete('/bus-schedules/{busSchedule}', [AdminBusScheduleController::class, 'destroy'])->name('bus-schedules.destroy');
 
-// Routes that require admin role
-Route::middleware(['auth', 'role:admin'])->group(function () {
     // Admin Site Routes
     Route::get('/sites/create', [SiteController::class, 'create'])->name('sites.create');
     Route::post('/sites', [SiteController::class, 'store'])->name('sites.store');
     Route::get('/sites/{site}/edit', [SiteController::class, 'edit'])->name('sites.edit');
     Route::put('/sites/{site}', [SiteController::class, 'update'])->name('sites.update');
     Route::delete('/sites/{site}', [SiteController::class, 'destroy'])->name('sites.destroy');
-
-    // Admin Schedule Routes
-    Route::get('/schedules/create', [GarbageScheduleController::class, 'create'])->name('schedules.create');
-    Route::post('/schedules', [GarbageScheduleController::class, 'store'])->name('schedules.store');
-    Route::get('/schedules/{schedule}/edit', [GarbageScheduleController::class, 'edit'])->name('schedules.edit');
-    Route::put('/schedules/{schedule}', [GarbageScheduleController::class, 'update'])->name('schedules.update');
-    Route::delete('/schedules/{schedule}', [GarbageScheduleController::class, 'destroy'])->name('schedules.destroy');
-
-    // Admin Waste Report Routes
-    Route::patch('/waste-reports/{waste_report}/assign', [WasteReportController::class, 'assign'])
-        ->name('waste-reports.assign');
 });
 
-
+// Worker routes
+Route::middleware(['auth', 'role:worker'])->prefix('worker')->name('worker.')->group(function () {
+    // Worker Bus Schedule Routes
+    Route::get('/bus-schedules', [WorkerBusScheduleController::class, 'index'])->name('bus-schedules.index');
+    Route::get('/bus-schedules/{busSchedule}/edit', [WorkerBusScheduleController::class, 'edit'])->name('bus-schedules.edit');
+    Route::put('/bus-schedules/{busSchedule}', [WorkerBusScheduleController::class, 'update'])->name('bus-schedules.update');
+});
 
 require __DIR__.'/auth.php';

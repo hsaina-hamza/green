@@ -57,7 +57,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('manage-schedules', function ($user) {
-            return $user->isAdmin();
+            return $user->hasAnyRole(['admin', 'worker']);
         });
 
         Gate::define('view-statistics', function ($user) {
