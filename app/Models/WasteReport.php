@@ -26,6 +26,11 @@ class WasteReport extends Model
         'worker_id',
         'estimated_size',
         'location_details',
+<<<<<<< HEAD
+=======
+        'latitude',
+        'longitude',
+>>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
         'image_url',
     ];
 
@@ -36,6 +41,11 @@ class WasteReport extends Model
      */
     protected $casts = [
         'estimated_size' => 'integer',
+<<<<<<< HEAD
+=======
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
+>>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',

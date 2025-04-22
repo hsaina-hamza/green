@@ -22,6 +22,19 @@ class Comment extends Model
     ];
 
     /**
+<<<<<<< HEAD
+=======
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    /**
+>>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
      * The relationships that should always be loaded.
      *
      * @var array<string>

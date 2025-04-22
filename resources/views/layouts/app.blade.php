@@ -63,7 +63,10 @@
     </div>
 
     <!-- Scripts -->
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+=======
+>>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
     @stack('scripts')
 </body>
 </html>
