@@ -13,28 +13,25 @@ class WasteReportPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(?User $user): bool
+    public function viewAny(User $user): bool
     {
-        // Allow all users (including guests) to view waste reports
-        return true;
+        return true; // Anyone authenticated can view the list
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(?User $user, WasteReport $wasteReport): bool
+    public function view(User $user, WasteReport $wasteReport): bool
     {
-        // Allow all users (including guests) to view individual waste reports
-        return true;
+        return true; // Anyone authenticated can view details
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(?User $user): bool
+    public function create(User $user): bool
     {
-        // Allow any authenticated user to create waste reports
-        return $user !== null;
+        return true; // Any authenticated user can create reports
     }
 
     /**
@@ -42,13 +39,11 @@ class WasteReportPolicy
      */
     public function update(User $user, WasteReport $wasteReport): bool
     {
-        // Allow users to update their own reports
-        if ($user->id === $wasteReport->user_id) {
-            return true;
-        }
-
-        // Allow workers and admins to update any report
-        return $user->hasAnyRole(['worker', 'admin']);
+        // Users can update their own reports
+        // Admins and workers can update any report
+        return $user->id === $wasteReport->reported_by ||
+               $user->isAdmin() ||
+               $user->isWorker();
     }
 
     /**
@@ -56,13 +51,8 @@ class WasteReportPolicy
      */
     public function delete(User $user, WasteReport $wasteReport): bool
     {
-        // Allow users to delete their own reports
-        if ($user->id === $wasteReport->user_id) {
-            return true;
-        }
-
-        // Allow admins to delete any report
-        return $user->isAdmin();
+        // Only admins or the report creator can delete
+        return $user->isAdmin() || $user->id === $wasteReport->reported_by;
     }
 
     /**
@@ -70,43 +60,7 @@ class WasteReportPolicy
      */
     public function updateStatus(User $user, WasteReport $wasteReport): bool
     {
-        // Only workers and admins can update status
-        return $user->hasAnyRole(['worker', 'admin']);
-    }
-
-    /**
-     * Determine whether the user can assign workers to the model.
-     */
-    public function assign(User $user, WasteReport $wasteReport): bool
-    {
-        // Only admins can assign workers
-        return $user->isAdmin();
-    }
-
-    /**
-     * Determine whether the user can add comments to the model.
-     */
-    public function comment(User $user, WasteReport $wasteReport): bool
-    {
-        // Any authenticated user can comment
-        return true;
-    }
-
-    /**
-     * Determine whether the user can view report statistics.
-     */
-    public function viewStatistics(User $user): bool
-    {
-        // Only workers and admins can view statistics
-        return $user->hasAnyRole(['worker', 'admin']);
-    }
-
-    /**
-     * Determine whether the user can export reports.
-     */
-    public function export(User $user): bool
-    {
-        // Only admins can export reports
-        return $user->isAdmin();
+        // Only admins and workers can update status
+        return $user->isAdmin() || $user->isWorker();
     }
 }

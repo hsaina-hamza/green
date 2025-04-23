@@ -3,111 +3,119 @@
 namespace App\Http\Controllers;
 
 use App\Models\WasteReport;
-use App\Models\Site;
+use App\Models\WasteType;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 
 class WasteReportController extends Controller
 {
-    use AuthorizesRequests, ValidatesRequests;
-
-    /**
-     * Create a new controller instance.
-     */
     public function __construct()
     {
-        // Apply auth middleware except for index and show
-        $this->middleware('auth')->except(['index', 'show']);
+        // Public routes
+        $this->middleware('auth')->except(['index', 'show', 'wasteMap']);
     }
 
     /**
-     * Display a listing of the waste reports.
+     * Check if the show route is actually trying to access create
      */
+    private function isCreateRoute($waste_report): bool
+    {
+        return $waste_report === 'create';
+    }
+
     public function index()
     {
-        $wasteReports = WasteReport::with(['site', 'user', 'worker'])
-            ->latest()
-            ->paginate(10);
-
+        $wasteReports = WasteReport::latest()->paginate(10);
         return view('waste-reports.index', compact('wasteReports'));
     }
 
-    /**
-     * Show the form for creating a new waste report.
-     */
     public function create()
     {
-        $sites = Site::all();
-        return view('waste-reports.create', compact('sites'));
+        $wasteTypes = WasteType::all();
+        $locations = Location::all();
+        return view('waste-reports.create', compact('wasteTypes', 'locations'));
     }
 
-    /**
-     * Store a newly created waste report in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'type' => 'required|string|in:general,recyclable,hazardous,organic',
-            'urgency_level' => 'required|string|in:low,medium,high',
-            'site_id' => 'required|exists:sites,id',
-            'estimated_size' => 'nullable|integer|min:1',
-            'location_details' => 'nullable|string|max:255',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
-            'image_url' => 'nullable|string|max:255',
+            'waste_type_id' => 'required|exists:waste_types,id',
+            'quantity' => 'required|numeric|min:0',
+            'unit' => 'required|string|max:50',
+            'location_id' => 'required|exists:locations,id',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048', // 2MB max
         ]);
 
-        $validated['user_id'] = Auth::id();
-        $validated['status'] = 'pending';
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('waste-reports', 'public');
+        }
 
-        $wasteReport = WasteReport::create($validated);
+        $wasteReport = WasteReport::create([
+            'waste_type_id' => $validated['waste_type_id'],
+            'quantity' => $validated['quantity'],
+            'unit' => $validated['unit'],
+            'location_id' => $validated['location_id'],
+            'description' => $validated['description'] ?? null,
+            'reported_by' => Auth::id(),
+            'status' => 'pending',
+            'image_path' => $imagePath,
+        ]);
 
         return redirect()->route('waste-reports.show', $wasteReport)
             ->with('success', 'Waste report created successfully.');
     }
 
-    /**
-     * Display the specified waste report.
-     */
-    public function show(WasteReport $wasteReport)
+    public function show($waste_report)
     {
-        $wasteReport->load(['site', 'user', 'worker', 'comments.user']);
+        // If trying to access 'create' route, check auth and redirect to create
+        if ($this->isCreateRoute($waste_report)) {
+            if (!Auth::check()) {
+                return Redirect::route('login')->with('message', 'Please login to create a waste report.');
+            }
+            return $this->create();
+        }
+
+        // Otherwise treat as a normal show request
+        if (!is_numeric($waste_report)) {
+            abort(404);
+        }
+
+        $wasteReport = WasteReport::findOrFail($waste_report);
         return view('waste-reports.show', compact('wasteReport'));
     }
 
-    /**
-     * Show the form for editing the specified waste report.
-     */
     public function edit(WasteReport $wasteReport)
     {
         $this->authorize('update', $wasteReport);
-        $sites = Site::all();
-        return view('waste-reports.edit', compact('wasteReport', 'sites'));
+        return view('waste-reports.edit', compact('wasteReport'));
     }
 
-    /**
-     * Update the specified waste report in storage.
-     */
     public function update(Request $request, WasteReport $wasteReport)
     {
         $this->authorize('update', $wasteReport);
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'type' => 'required|string|in:general,recyclable,hazardous,organic',
-            'urgency_level' => 'required|string|in:low,medium,high',
-            'site_id' => 'required|exists:sites,id',
-            'estimated_size' => 'nullable|integer|min:1',
-            'location_details' => 'nullable|string|max:255',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
-            'image_url' => 'nullable|string|max:255',
+            'waste_type' => 'required|string|max:255',
+            'quantity' => 'required|numeric|min:0',
+            'unit' => 'required|string|max:50',
+            'location' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:pending,in_progress,resolved',
+            'image' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($wasteReport->image_path) {
+                Storage::disk('public')->delete($wasteReport->image_path);
+            }
+            $validated['image_path'] = $request->file('image')->store('waste-reports', 'public');
+        }
 
         $wasteReport->update($validated);
 
@@ -115,12 +123,14 @@ class WasteReportController extends Controller
             ->with('success', 'Waste report updated successfully.');
     }
 
-    /**
-     * Remove the specified waste report from storage.
-     */
     public function destroy(WasteReport $wasteReport)
     {
         $this->authorize('delete', $wasteReport);
+
+        // Delete image if exists
+        if ($wasteReport->image_path) {
+            Storage::disk('public')->delete($wasteReport->image_path);
+        }
 
         $wasteReport->delete();
 
@@ -129,45 +139,43 @@ class WasteReportController extends Controller
     }
 
     /**
-     * Update the status of the specified waste report.
+     * Update the status of the waste report.
      */
     public function updateStatus(Request $request, WasteReport $wasteReport)
     {
         $this->authorize('updateStatus', $wasteReport);
 
         $validated = $request->validate([
-            'status' => 'required|string|in:pending,in_progress,completed',
+            'status' => 'required|in:pending,in_progress,resolved',
         ]);
 
         $wasteReport->update($validated);
 
-        return redirect()->route('waste-reports.show', $wasteReport)
-            ->with('success', 'Waste report status updated successfully.');
+        return back()->with('success', 'Status updated successfully.');
     }
 
     /**
-     * Assign a worker to the specified waste report.
-     */
-    public function assign(Request $request, WasteReport $wasteReport)
-    {
-        $this->authorize('assign', $wasteReport);
-
-        $validated = $request->validate([
-            'worker_id' => 'required|exists:users,id',
-        ]);
-
-        $wasteReport->update($validated);
-
-        return redirect()->route('waste-reports.show', $wasteReport)
-            ->with('success', 'Worker assigned successfully.');
-    }
-
-    /**
-     * Display the waste map with all waste reports.
+     * Display a map of all waste reports.
      */
     public function wasteMap()
     {
-        $wasteReports = WasteReport::with('site')->get();
-        return view('waste-map', compact('wasteReports'));
+        $reports = WasteReport::with(['site'])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get()
+            ->map(function ($report) {
+                return [
+                    'id' => $report->id,
+                    'title' => $report->title,
+                    'type' => $report->waste_type,
+                    'status' => ucfirst($report->status),
+                    'location' => $report->location,
+                    'latitude' => $report->latitude,
+                    'longitude' => $report->longitude,
+                    'url' => route('waste-reports.show', $report),
+                ];
+            });
+
+        return view('waste-reports.map', compact('reports'));
     }
 }

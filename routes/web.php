@@ -63,10 +63,6 @@ Route::get('/calendar', [GarbageScheduleController::class, 'calendar'])->name('s
 Route::get('/sites/{site}/schedules', [GarbageScheduleController::class, 'siteSchedules'])
     ->name('sites.schedules');
 
-// Public Waste Report Routes
-Route::get('/waste-reports', [WasteReportController::class, 'index'])->name('waste-reports.index');
-Route::get('/waste-reports/{waste_report}', [WasteReportController::class, 'show'])->name('waste-reports.show');
-
 // Routes that require authentication
 Route::middleware(['auth'])->group(function () {
     // Profile Routes
@@ -92,6 +88,34 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
         ->name('comments.destroy');
 });
+
+// Public Waste Report Routes
+Route::get('/waste-reports', [WasteReportController::class, 'index'])->name('waste-reports.index');
+Route::get('/waste-reports/{id}', [WasteReportController::class, 'show'])
+    ->where('id', '[0-9]+')
+    ->name('waste-reports.show');
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Dashboard Routes
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Authenticated Waste Report Routes
+    Route::get('/waste-reports/create', [WasteReportController::class, 'create'])->name('waste-reports.create');
+    Route::post('/waste-reports', [WasteReportController::class, 'store'])->name('waste-reports.store');
+    Route::get('/waste-reports/{waste_report}/edit', [WasteReportController::class, 'edit'])->name('waste-reports.edit');
+    Route::put('/waste-reports/{waste_report}', [WasteReportController::class, 'update'])->name('waste-reports.update');
+    Route::delete('/waste-reports/{waste_report}', [WasteReportController::class, 'destroy'])->name('waste-reports.destroy');
+
+    // Comment Routes
+    Route::post('/waste-reports/{waste_report}/comments', [CommentController::class, 'store'])
+        ->name('comments.store');
+    Route::patch('/comments/{comment}', [CommentController::class, 'update'])
+        ->name('comments.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
+        ->name('comments.destroy');
 
 // Routes that require worker or admin role
 Route::middleware(['auth', CheckRole::class . ':worker,admin'])->group(function () {
