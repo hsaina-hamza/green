@@ -23,15 +23,14 @@ class WasteReport extends Model
         'status',
         'site_id',
         'user_id',
-        'worker_id',
+        'assigned_worker_id',
         'estimated_size',
         'location_details',
-<<<<<<< HEAD
-=======
         'latitude',
         'longitude',
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
         'image_url',
+        'location_id',
+        'waste_type_id'
     ];
 
     /**
@@ -41,11 +40,8 @@ class WasteReport extends Model
      */
     protected $casts = [
         'estimated_size' => 'integer',
-<<<<<<< HEAD
-=======
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -72,7 +68,7 @@ class WasteReport extends Model
      */
     public function worker()
     {
-        return $this->belongsTo(User::class, 'worker_id');
+        return $this->belongsTo(User::class, 'assigned_worker_id');
     }
 
     /**
@@ -81,6 +77,22 @@ class WasteReport extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the location associated with the waste report.
+     */
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
+    /**
+     * Get the waste type associated with the waste report.
+     */
+    public function wasteType()
+    {
+        return $this->belongsTo(WasteType::class);
     }
 
     /**
@@ -152,6 +164,15 @@ class WasteReport extends Model
      */
     public function isAssigned(): bool
     {
-        return $this->worker_id !== null;
+        return $this->assigned_worker_id !== null;
+    }
+
+    /**
+     * Alias for worker() relationship.
+     * Get the worker assigned to the waste report.
+     */
+    public function assignedWorker()
+    {
+        return $this->worker();
     }
 }

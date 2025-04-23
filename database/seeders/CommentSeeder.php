@@ -46,12 +46,15 @@ class CommentSeeder extends Seeder
             $numComments = rand(2, 4);
             
             for ($i = 0; $i < $numComments; $i++) {
+                $createdAt = now()->subDays(rand(1, 30))->subHours(rand(1, 24));
+                $updatedAt = $createdAt->copy()->addHours(rand(0, 48)); // Update time is after creation time
+                
                 Comment::create([
                     'user_id' => $users->random()->id,
                     'waste_report_id' => $report->id,
                     'text' => $sampleComments[array_rand($sampleComments)],
-                    'created_at' => now()->subDays(rand(0, 30))->subHours(rand(1, 24)),
-                    'updated_at' => now()->subDays(rand(0, 30))->subHours(rand(1, 24)),
+                    'created_at' => $createdAt,
+                    'updated_at' => $updatedAt,
                 ]);
             }
         }

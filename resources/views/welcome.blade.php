@@ -16,24 +16,14 @@
             </div>
             <nav>
                 <ul class="flex space-x-4">
-<<<<<<< HEAD
-                    <li><a href="{{ url('/') }}" class="hover:underline">Home</a></li>
-                    <li><a href="{{ url('/conservation-tips') }}" class="hover:underline">Conservation Tips</a></li>
-                    <li><a href="{{ url('/waste-map') }}" class="hover:underline">Waste Map</a></li>
-=======
                     <li><a href="{{ route('home') }}" class="hover:underline">Home</a></li>
                     <li><a href="{{ route('conservation.tips') }}" class="hover:underline">Conservation Tips</a></li>
                     <li><a href="{{ route('waste-map') }}" class="hover:underline">Waste Map</a></li>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                     <li><a href="{{ route('bus-times.index') }}" class="hover:underline">Bus Times</a></li>
                     <li><a href="{{ route('waste-reports.create') }}" class="hover:underline">Report Waste</a></li>
                     @if (Route::has('login'))
                         @auth
-<<<<<<< HEAD
-                            <li><a href="{{ url('/dashboard') }}" class="hover:underline">Dashboard</a></li>
-=======
                             <li><a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a></li>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                         @else
                             <li><a href="{{ route('login') }}" class="hover:underline">Login</a></li>
                         @endauth
@@ -54,11 +44,7 @@
                     <a href="{{ route('login') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2" 
                        onclick="alert('Please log in to report a waste site.')">Report Waste Site</a>
                 @endauth
-<<<<<<< HEAD
-                <a href="{{ url('/conservation-tips') }}" class="bg-transparent hover:bg-green-600 text-green-600 hover:text-white px-4 py-2 rounded border border-green-600">Conservation Tips</a>
-=======
                 <a href="{{ route('conservation.tips') }}" class="bg-transparent hover:bg-green-600 text-green-600 hover:text-white px-4 py-2 rounded border border-green-600">Conservation Tips</a>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
             </div>
         </div>
     </section>
@@ -82,11 +68,7 @@
                     <i class="fas fa-map-marked-alt text-4xl text-green-600 mb-4"></i>
                     <h3 class="text-lg font-semibold">Waste Map</h3>
                     <p class="text-sm">View reported waste sites on an interactive map and track cleanup progress.</p>
-<<<<<<< HEAD
-                    <a href="{{ url('/waste-map') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View Map</a>
-=======
                     <a href="{{ route('waste-map') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View Map</a>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                 </div>
                 <div class="bg-white p-6 rounded shadow text-center">
                     <i class="fas fa-bus text-4xl text-green-600 mb-4"></i>
@@ -98,11 +80,7 @@
                     <i class="fas fa-leaf text-4xl text-green-600 mb-4"></i>
                     <h3 class="text-lg font-semibold">Conservation Tips</h3>
                     <p class="text-sm">Learn how to reduce waste and protect our environment with practical tips.</p>
-<<<<<<< HEAD
-                    <a href="{{ url('/conservation-tips') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Learn More</a>
-=======
                     <a href="{{ route('conservation.tips') }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Learn More</a>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                 </div>
             </div>
         </div>
@@ -132,14 +110,10 @@
                     <div class="bg-gray-200 h-48 mb-4 rounded flex items-center justify-center">
                         <i class="fas fa-image text-4xl text-gray-400"></i>
                     </div>
-                    <h3 class="text-lg font-semibold">{{ $report->title }}</h3>
-                    <p class="text-sm">{{ $report->location }}</p>
-                    <p class="text-sm text-green-600 font-semibold">{{ $report->status }}</p>
-<<<<<<< HEAD
-                    <a href="{{ url('/waste-map', $report->id) }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View on map</a>
-=======
-                    <a href="{{ route('waste-reports.show', $report) }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View Report</a>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
+                    <h3 class="text-lg font-semibold">{{ $report->title ?? '' }}</h3>
+                    <p class="text-sm">{{ $report->location ?? '' }}</p>
+                    <p class="text-sm text-green-600 font-semibold">{{ $report->status ?? '' }}</p>
+                    <a href="{{ route('waste-reports.show', ['waste_report' => $report->id ?? 0]) }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View Report</a>
                 </div>
                 @empty
                 <div class="col-span-3 text-center text-gray-500">
@@ -149,11 +123,7 @@
                 @endforelse
             </div>
             <div class="text-center mt-8">
-<<<<<<< HEAD
-                <a href="{{ url('/waste-map') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View All Reports</a>
-=======
                 <a href="{{ route('waste-map') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View All Reports</a>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
             </div>
         </div>
     </section>
@@ -168,15 +138,9 @@
                 <div>
                     <h5 class="text-lg font-semibold">Quick Links</h5>
                     <ul class="mt-2 space-y-2">
-<<<<<<< HEAD
-                        <li><a href="{{ url('/') }}" class="hover:underline">Home</a></li>
-                        <li><a href="{{ url('/conservation-tips') }}" class="hover:underline">Conservation Tips</a></li>
-                        <li><a href="{{ url('/waste-map') }}" class="hover:underline">Waste Map</a></li>
-=======
                         <li><a href="{{ route('home') }}" class="hover:underline">Home</a></li>
                         <li><a href="{{ route('conservation.tips') }}" class="hover:underline">Conservation Tips</a></li>
                         <li><a href="{{ route('waste-map') }}" class="hover:underline">Waste Map</a></li>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                         <li><a href="{{ route('bus-times.index') }}" class="hover:underline">Bus Times</a></li>
                     </ul>
                 </div>

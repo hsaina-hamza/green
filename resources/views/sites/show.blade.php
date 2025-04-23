@@ -6,7 +6,7 @@
             </h2>
             <div class="flex space-x-4">
                 @can('update', $site)
-                    <a href="{{ route('sites.edit', $site) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <a href="{{ route('admin.sites.edit', $site) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         {{ __('Edit Site') }}
                     </a>
                 @endcan
@@ -110,7 +110,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">{{ __('Upcoming Schedules') }}</h3>
                         @can('create', App\Models\GarbageSchedule::class)
-                            <a href="{{ route('schedules.create', ['site_id' => $site->id]) }}" class="text-green-600 hover:text-green-700">
+                            <a href="{{ route('admin.schedules.create', ['site_id' => $site->id]) }}" class="text-green-600 hover:text-green-700">
                                 {{ __('Add New Schedule') }}
                             </a>
                         @endcan
@@ -138,7 +138,7 @@
                                                 {{ $schedule->truck_number }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="{{ route('schedules.show', $schedule) }}" class="text-green-600 hover:text-green-900">View</a>
+                                                <a href="{{ route('admin.schedules.show', $schedule) }}" class="text-green-600 hover:text-green-900">View</a>
                                             </td>
                                         </tr>
                                     @endforeach

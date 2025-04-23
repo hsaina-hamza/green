@@ -22,7 +22,8 @@ class BusTimeSeeder extends Seeder
                 'route' => 'Route ' . $location->name . ' - Morning',
                 'departure_time' => '07:00',
                 'arrival_time' => '08:30',
-                'frequency' => 'Daily',
+                'frequency' => 'daily',
+                'notes' => 'Morning commuter service',
             ]);
 
             // Afternoon schedule
@@ -31,7 +32,8 @@ class BusTimeSeeder extends Seeder
                 'route' => 'Route ' . $location->name . ' - Afternoon',
                 'departure_time' => '14:00',
                 'arrival_time' => '15:30',
-                'frequency' => 'Daily',
+                'frequency' => 'weekdays',
+                'notes' => 'Afternoon service, weekdays only',
             ]);
 
             // Evening schedule
@@ -40,7 +42,18 @@ class BusTimeSeeder extends Seeder
                 'route' => 'Route ' . $location->name . ' - Evening',
                 'departure_time' => '18:00',
                 'arrival_time' => '19:30',
-                'frequency' => 'Daily',
+                'frequency' => 'daily',
+                'notes' => 'Evening commuter service',
+            ]);
+
+            // Weekend schedule
+            BusTime::create([
+                'location_id' => $location->id,
+                'route' => 'Route ' . $location->name . ' - Weekend',
+                'departure_time' => '10:00',
+                'arrival_time' => '11:30',
+                'frequency' => 'weekends',
+                'notes' => 'Weekend service only',
             ]);
         }
     }

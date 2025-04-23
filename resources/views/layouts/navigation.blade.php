@@ -10,22 +10,14 @@ use Illuminate\Support\Facades\Route;
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-<<<<<<< HEAD
                     <a href="{{ url('/') }}">
-=======
-                    <a href="{{ route('home') }}">
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-<<<<<<< HEAD
                     <x-nav-link :href="url('/')" :active="request()->is('/')">
-=======
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                         {{ __('Home') }}
                     </x-nav-link>
 
@@ -84,18 +76,9 @@ use Illuminate\Support\Facades\Route;
                         </x-nav-link>
 
                         @if(Auth::user()->isAdmin() || Auth::user()->isWorker())
-<<<<<<< HEAD
-                            <x-nav-link :href="route('admin.statistics')" :active="request()->routeIs('admin.statistics')">
-                                {{ __('Statistics') }}
-                            </x-nav-link>
-=======
                             <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
                                 {{ __('Statistics') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('bus-times.manage')" :active="request()->routeIs('bus-times.*')">
-                                {{ __('Bus Times Management') }}
-                            </x-nav-link>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                         @endif
                     @endauth
                 </div>
@@ -161,11 +144,7 @@ use Illuminate\Support\Facades\Route;
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-<<<<<<< HEAD
             <x-responsive-nav-link :href="url('/')" :active="request()->is('/')">
-=======
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                 {{ __('Home') }}
             </x-responsive-nav-link>
 
@@ -207,18 +186,9 @@ use Illuminate\Support\Facades\Route;
                 </x-responsive-nav-link>
 
                 @if(Auth::user()->isAdmin() || Auth::user()->isWorker())
-<<<<<<< HEAD
-                    <x-responsive-nav-link :href="route('admin.statistics')" :active="request()->routeIs('admin.statistics')">
-                        {{ __('Statistics') }}
-                    </x-responsive-nav-link>
-=======
                     <x-responsive-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
                         {{ __('Statistics') }}
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('bus-times.manage')" :active="request()->routeIs('bus-times.*')">
-                        {{ __('Bus Times Management') }}
-                    </x-responsive-nav-link>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                 @endif
             @endauth
         </div>

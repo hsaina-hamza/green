@@ -18,13 +18,27 @@ class BusTime extends Model
         'notes'
     ];
 
-    protected $casts = [
-        'departure_time' => 'datetime',
-        'arrival_time' => 'datetime',
-    ];
-
+    /**
+     * Get the location that owns the bus time.
+     */
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    /**
+     * Get the formatted departure time.
+     */
+    public function getDepartureTimeAttribute($value)
+    {
+        return substr($value, 0, 5);
+    }
+
+    /**
+     * Get the formatted arrival time.
+     */
+    public function getArrivalTimeAttribute($value)
+    {
+        return substr($value, 0, 5);
     }
 }

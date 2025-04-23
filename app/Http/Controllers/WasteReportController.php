@@ -56,11 +56,8 @@ class WasteReportController extends Controller
             'site_id' => 'required|exists:sites,id',
             'estimated_size' => 'nullable|integer|min:1',
             'location_details' => 'nullable|string|max:255',
-<<<<<<< HEAD
-=======
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
             'image_url' => 'nullable|string|max:255',
         ]);
 
@@ -107,11 +104,8 @@ class WasteReportController extends Controller
             'site_id' => 'required|exists:sites,id',
             'estimated_size' => 'nullable|integer|min:1',
             'location_details' => 'nullable|string|max:255',
-<<<<<<< HEAD
-=======
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
             'image_url' => 'nullable|string|max:255',
         ]);
 
@@ -173,11 +167,7 @@ class WasteReportController extends Controller
      */
     public function wasteMap()
     {
-<<<<<<< HEAD
-        $wasteReports = WasteReport::all();
-=======
         $wasteReports = WasteReport::with('site')->get();
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
         return view('waste-map', compact('wasteReports'));
     }
 }

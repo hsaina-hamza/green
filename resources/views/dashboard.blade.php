@@ -83,13 +83,8 @@
                                     <div class="flex justify-between items-start">
                                         <div>
                                             <h4 class="font-medium text-gray-900">{{ $schedule->site->name }}</h4>
-<<<<<<< HEAD
                                             <p class="text-sm text-gray-600">Date: {{ $schedule->scheduled_date ? $schedule->scheduled_date->format('M d, Y') : 'Not scheduled' }}</p>
                                             <p class="text-sm text-gray-600">Time: {{ $schedule->scheduled_date ? $schedule->scheduled_date->format('g:i A') : 'Not set' }}</p>
-=======
-                                            <p class="text-sm text-gray-600">Date: {{ $schedule->scheduled_date->format('M d, Y') }}</p>
-                                            <p class="text-sm text-gray-600">Time: {{ $schedule->scheduled_date->format('g:i A') }}</p>
->>>>>>> 231977c8c8cc7dfc8f6b499ce1a4fff2b8175808
                                         </div>
                                         <a href="{{ route('schedules.show', $schedule) }}" class="text-sm text-green-600 hover:text-green-700">View Details</a>
                                     </div>
