@@ -80,6 +80,12 @@ use Illuminate\Support\Facades\Route;
                                 {{ __('Statistics') }}
                             </x-nav-link>
                         @endif
+
+                        @if(Auth::user()->isAdmin())
+                            <x-nav-link :href="route('admin.employees.index')" :active="request()->routeIs('admin.employees.*')">
+                                {{ __('Employee Management') }}
+                            </x-nav-link>
+                        @endif
                     @endauth
                 </div>
             </div>

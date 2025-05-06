@@ -11,9 +11,27 @@ class Location extends Model
 
     protected $fillable = [
         'name',
+        'address',
         'latitude',
         'longitude',
+        'site_id',
     ];
+
+    /**
+     * Get the coordinates as a string.
+     */
+    public function getCoordinatesAttribute(): string
+    {
+        return "{$this->latitude}, {$this->longitude}";
+    }
+
+    /**
+     * Scope a query to only include locations with coordinates.
+     */
+    public function scopeHasCoordinates($query)
+    {
+        return $query->whereNotNull('latitude')->whereNotNull('longitude');
+    }
 
     public function wasteReports()
     {
@@ -28,5 +46,10 @@ class Location extends Model
     public function busTimes()
     {
         return $this->hasMany(BusTime::class);
+    }
+
+    public function site()
+    {
+        return $this->belongsTo(Site::class);
     }
 }

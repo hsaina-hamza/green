@@ -8,43 +8,33 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
         // Create admin user
-        User::create([
-            'name' => 'Admin User',
+        $admin = User::create([
+            'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
-            'role' => 'admin',
             'email_verified_at' => now(),
         ]);
+        $admin->assignRole('admin');
 
-        // Create worker users
-        for ($i = 1; $i <= 5; $i++) {
-            User::create([
-                'name' => "Worker User {$i}",
-                'email' => "worker{$i}@example.com",
-                'password' => Hash::make('password'),
-                'role' => 'worker',
-                'email_verified_at' => now(),
-            ]);
-        }
+        // Create worker user
+        $worker = User::create([
+            'name' => 'Worker',
+            'email' => 'worker@example.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
+        $worker->assignRole('employee');
 
-        // Create regular users
-        for ($i = 1; $i <= 10; $i++) {
-            User::create([
-                'name' => "Regular User {$i}",
-                'email' => "user{$i}@example.com",
-                'password' => Hash::make('password'),
-                'role' => 'user',
-                'email_verified_at' => now(),
-            ]);
-        }
-
-        // Create additional users with factory
-        User::factory(20)->create();
+        // Create regular user
+        $user = User::create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
+        $user->assignRole('user');
     }
 }

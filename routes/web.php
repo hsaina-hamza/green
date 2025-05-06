@@ -41,9 +41,11 @@ Route::get('/', function () {
 Route::get('/conservation-tips', [DashboardController::class, 'conservationTips'])->name('conservation.tips');
 Route::get('/waste-map', [WasteReportController::class, 'wasteMap'])->name('waste-map');
 Route::get('/bus-times', [BusTimesController::class, 'index'])->name('bus-times.index');
+Route::get('/waste-reports/create', [WasteReportController::class, 'createArabic'])->name('waste-reports.create');
+Route::post('/waste-reports', [WasteReportController::class, 'store'])->name('waste-reports.store')->withoutMiddleware(['auth']);
 
 // Protected Bus Times Management Routes
-Route::middleware(['auth', CheckRole::class . ':worker,admin'])->group(function () {
+Route::middleware(['auth', CheckRole::class . ':employee,admin'])->group(function () {
     Route::get('/bus-times/create', [BusTimesController::class, 'create'])->name('bus-times.create');
     Route::post('/bus-times', [BusTimesController::class, 'store'])->name('bus-times.store');
     Route::get('/bus-times/{busTime}/edit', [BusTimesController::class, 'edit'])->name('bus-times.edit');
@@ -74,8 +76,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Authenticated Waste Report Routes
-    Route::get('/waste-reports/create', [WasteReportController::class, 'create'])->name('waste-reports.create');
-    Route::post('/waste-reports', [WasteReportController::class, 'store'])->name('waste-reports.store');
     Route::get('/waste-reports/{waste_report}/edit', [WasteReportController::class, 'edit'])->name('waste-reports.edit');
     Route::put('/waste-reports/{waste_report}', [WasteReportController::class, 'update'])->name('waste-reports.update');
     Route::delete('/waste-reports/{waste_report}', [WasteReportController::class, 'destroy'])->name('waste-reports.destroy');
@@ -91,34 +91,14 @@ Route::middleware(['auth'])->group(function () {
 
 // Public Waste Report Routes
 Route::get('/waste-reports', [WasteReportController::class, 'index'])->name('waste-reports.index');
-Route::get('/waste-reports/{id}', [WasteReportController::class, 'show'])
-    ->where('id', '[0-9]+')
+Route::get('/waste-reports/{waste_report}', [WasteReportController::class, 'show'])
+    ->where('waste_report', '[0-9]+')
     ->name('waste-reports.show');
-    // Profile Routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Dashboard Routes
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Authenticated Waste Report Routes
-    Route::get('/waste-reports/create', [WasteReportController::class, 'create'])->name('waste-reports.create');
-    Route::post('/waste-reports', [WasteReportController::class, 'store'])->name('waste-reports.store');
-    Route::get('/waste-reports/{waste_report}/edit', [WasteReportController::class, 'edit'])->name('waste-reports.edit');
-    Route::put('/waste-reports/{waste_report}', [WasteReportController::class, 'update'])->name('waste-reports.update');
-    Route::delete('/waste-reports/{waste_report}', [WasteReportController::class, 'destroy'])->name('waste-reports.destroy');
-
-    // Comment Routes
-    Route::post('/waste-reports/{waste_report}/comments', [CommentController::class, 'store'])
-        ->name('comments.store');
-    Route::patch('/comments/{comment}', [CommentController::class, 'update'])
-        ->name('comments.update');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
-        ->name('comments.destroy');
+Route::get('/waste-reports/create-ar', [WasteReportController::class, 'createArabic'])
+    ->name('waste-reports.create-ar');
 
 // Routes that require worker or admin role
-Route::middleware(['auth', CheckRole::class . ':worker,admin'])->group(function () {
+Route::middleware(['auth', CheckRole::class . ':employee,admin'])->group(function () {
     Route::get('/statistics', [DashboardController::class, 'statistics'])->name('statistics');
     Route::patch('/waste-reports/{waste_report}/status', [WasteReportController::class, 'updateStatus'])
         ->name('waste-reports.update-status');
@@ -127,6 +107,9 @@ Route::middleware(['auth', CheckRole::class . ':worker,admin'])->group(function 
 // Admin routes
 Route::middleware(['auth', CheckRole::class . ':admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/statistics', [DashboardController::class, 'statistics'])->name('statistics');
+    
+    // Employee Management Routes
+    Route::resource('employees', \App\Http\Controllers\Admin\EmployeeController::class);
     
     // Admin Bus Schedule Routes
     Route::get('/bus-schedules', [AdminBusScheduleController::class, 'index'])->name('bus-schedules.index');
@@ -156,7 +139,7 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->prefix('admin')->name(
 });
 
 // Worker routes
-Route::middleware(['auth', CheckRole::class . ':worker'])->prefix('worker')->name('worker.')->group(function () {
+Route::middleware(['auth', CheckRole::class . ':employee'])->prefix('worker')->name('worker.')->group(function () {
     // Worker Bus Schedule Routes
     Route::get('/bus-schedules', [WorkerBusScheduleController::class, 'index'])->name('bus-schedules.index');
     Route::get('/bus-schedules/{busSchedule}/edit', [WorkerBusScheduleController::class, 'edit'])->name('bus-schedules.edit');

@@ -12,12 +12,13 @@ class WasteReport extends Model
     protected $fillable = [
         'waste_type_id',
         'location_id',
-        'quantity',
-        'unit',
+        'site_id',
         'description',
         'reported_by',
         'status',
         'image_path',
+        'urgency_level',
+        'title',
     ];
 
     /**
@@ -34,6 +35,14 @@ class WasteReport extends Model
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    /**
+     * Get the site associated with the report.
+     */
+    public function site()
+    {
+        return $this->belongsTo(Site::class);
     }
 
     /**
@@ -74,5 +83,13 @@ class WasteReport extends Model
     public function isResolved(): bool
     {
         return $this->status === 'resolved';
+    }
+
+    /**
+     * Get the assigned worker for the waste report.
+     */
+    public function assignedWorker()
+    {
+        return $this->belongsTo(User::class, 'worker_id');
     }
 }

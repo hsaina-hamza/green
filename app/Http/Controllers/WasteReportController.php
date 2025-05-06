@@ -15,15 +15,7 @@ class WasteReportController extends Controller
     public function __construct()
     {
         // Public routes
-        $this->middleware('auth')->except(['index', 'show', 'wasteMap']);
-    }
-
-    /**
-     * Check if the show route is actually trying to access create
-     */
-    private function isCreateRoute($waste_report): bool
-    {
-        return $waste_report === 'create';
+        $this->middleware('auth')->except(['index', 'show', 'wasteMap', 'createArabic', 'store']);
     }
 
     public function index()
@@ -32,61 +24,84 @@ class WasteReportController extends Controller
         return view('waste-reports.index', compact('wasteReports'));
     }
 
-    public function create()
+    public function createArabic()
     {
         $wasteTypes = WasteType::all();
-        $locations = Location::all();
-        return view('waste-reports.create', compact('wasteTypes', 'locations'));
+        $messages = [
+            'waste_type_id.required' => 'يرجى اختيار نوع النفايات',
+            'waste_type_id.exists' => 'نوع النفايات غير صالح',
+            'latitude.required' => 'يرجى تحديد الموقع على الخريطة',
+            'longitude.required' => 'يرجى تحديد الموقع على الخريطة',
+            'latitude.numeric' => 'إحداثيات غير صالحة',
+            'longitude.numeric' => 'إحداثيات غير صالحة',
+            'latitude.between' => 'إحداثيات غير صالحة',
+            'longitude.between' => 'إحداثيات غير صالحة',
+            'image.image' => 'يجب أن يكون الملف صورة',
+            'image.max' => 'حجم الصورة يجب أن لا يتجاوز 2 ميغابايت',
+        ];
+        return view('waste-reports.create-ar', compact('wasteTypes', 'messages'));
     }
 
     public function store(Request $request)
     {
+        $messages = [
+            'waste_type_id.required' => 'يرجى اختيار نوع النفايات',
+            'waste_type_id.exists' => 'نوع النفايات غير صالح',
+            'latitude.required' => 'يرجى تحديد الموقع على الخريطة',
+            'longitude.required' => 'يرجى تحديد الموقع على الخريطة',
+            'latitude.numeric' => 'إحداثيات غير صالحة',
+            'longitude.numeric' => 'إحداثيات غير صالحة',
+            'latitude.between' => 'إحداثيات غير صالحة',
+            'longitude.between' => 'إحداثيات غير صالحة',
+            'image.image' => 'يجب أن يكون الملف صورة',
+            'image.max' => 'حجم الصورة يجب أن لا يتجاوز 2 ميغابايت',
+        ];
+
         $validated = $request->validate([
             'waste_type_id' => 'required|exists:waste_types,id',
-            'quantity' => 'required|numeric|min:0',
-            'unit' => 'required|string|max:50',
-            'location_id' => 'required|exists:locations,id',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048', // 2MB max
-        ]);
+            'image' => 'nullable|image|max:2048',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+        ], $messages);
 
+        // Handle image upload
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('waste-reports', 'public');
         }
 
+        // Get default site
+        $defaultSite = \App\Models\Site::first();
+        
+        // Create or find location based on coordinates
+        $location = Location::firstOrCreate([
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude']
+        ], [
+            'name' => 'Location at ' . $validated['latitude'] . ', ' . $validated['longitude'],
+            'site_id' => $defaultSite->id
+        ]);
+
+        // Create waste report
         $wasteReport = WasteReport::create([
             'waste_type_id' => $validated['waste_type_id'],
-            'quantity' => $validated['quantity'],
-            'unit' => $validated['unit'],
-            'location_id' => $validated['location_id'],
-            'description' => $validated['description'] ?? null,
-            'reported_by' => Auth::id(),
+            'location_id' => $location->id,
+            'site_id' => $location->site_id,
+            'description' => $validated['description'],
+            'reported_by' => Auth::id() ?? null,
             'status' => 'pending',
             'image_path' => $imagePath,
+            'urgency_level' => $request->input('urgency_level', 'normal'),
         ]);
 
         return redirect()->route('waste-reports.show', $wasteReport)
-            ->with('success', 'Waste report created successfully.');
+            ->with('success', 'تم إرسال التقرير بنجاح');
     }
 
-    public function show($waste_report)
+    public function show(WasteReport $waste_report)
     {
-        // If trying to access 'create' route, check auth and redirect to create
-        if ($this->isCreateRoute($waste_report)) {
-            if (!Auth::check()) {
-                return Redirect::route('login')->with('message', 'Please login to create a waste report.');
-            }
-            return $this->create();
-        }
-
-        // Otherwise treat as a normal show request
-        if (!is_numeric($waste_report)) {
-            abort(404);
-        }
-
-        $wasteReport = WasteReport::findOrFail($waste_report);
-        return view('waste-reports.show', compact('wasteReport'));
+        return view('waste-reports.show', ['wasteReport' => $waste_report]);
     }
 
     public function edit(WasteReport $wasteReport)
@@ -100,17 +115,13 @@ class WasteReportController extends Controller
         $this->authorize('update', $wasteReport);
 
         $validated = $request->validate([
-            'waste_type' => 'required|string|max:255',
-            'quantity' => 'required|numeric|min:0',
-            'unit' => 'required|string|max:50',
-            'location' => 'required|string|max:255',
+            'waste_type_id' => 'required|exists:waste_types,id',
             'description' => 'nullable|string',
             'status' => 'required|in:pending,in_progress,resolved',
             'image' => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($wasteReport->image_path) {
                 Storage::disk('public')->delete($wasteReport->image_path);
             }
@@ -120,14 +131,13 @@ class WasteReportController extends Controller
         $wasteReport->update($validated);
 
         return redirect()->route('waste-reports.show', $wasteReport)
-            ->with('success', 'Waste report updated successfully.');
+            ->with('success', 'تم تحديث التقرير بنجاح');
     }
 
     public function destroy(WasteReport $wasteReport)
     {
         $this->authorize('delete', $wasteReport);
 
-        // Delete image if exists
         if ($wasteReport->image_path) {
             Storage::disk('public')->delete($wasteReport->image_path);
         }
@@ -135,43 +145,25 @@ class WasteReportController extends Controller
         $wasteReport->delete();
 
         return redirect()->route('waste-reports.index')
-            ->with('success', 'Waste report deleted successfully.');
+            ->with('success', 'تم حذف التقرير بنجاح');
     }
 
-    /**
-     * Update the status of the waste report.
-     */
-    public function updateStatus(Request $request, WasteReport $wasteReport)
-    {
-        $this->authorize('updateStatus', $wasteReport);
-
-        $validated = $request->validate([
-            'status' => 'required|in:pending,in_progress,resolved',
-        ]);
-
-        $wasteReport->update($validated);
-
-        return back()->with('success', 'Status updated successfully.');
-    }
-
-    /**
-     * Display a map of all waste reports.
-     */
     public function wasteMap()
     {
-        $reports = WasteReport::with(['site'])
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
+        $reports = WasteReport::with(['site', 'wasteType', 'location'])
+            ->whereHas('location', function ($query) {
+                $query->whereNotNull('latitude')->whereNotNull('longitude');
+            })
             ->get()
             ->map(function ($report) {
                 return [
                     'id' => $report->id,
                     'title' => $report->title,
-                    'type' => $report->waste_type,
+                    'type' => $report->wasteType->name,
                     'status' => ucfirst($report->status),
-                    'location' => $report->location,
-                    'latitude' => $report->latitude,
-                    'longitude' => $report->longitude,
+                    'location' => $report->location->name,
+                    'latitude' => $report->location->latitude,
+                    'longitude' => $report->location->longitude,
                     'url' => route('waste-reports.show', $report),
                 ];
             });
