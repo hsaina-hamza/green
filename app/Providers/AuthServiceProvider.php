@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\BusTime;
 use App\Models\Comment;
 use App\Models\GarbageSchedule;
 use App\Models\Site;
 use App\Models\WasteReport;
+use App\Policies\BusTimePolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\GarbageSchedulePolicy;
 use App\Policies\SitePolicy;
@@ -25,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         Comment::class => CommentPolicy::class,
         Site::class => SitePolicy::class,
         GarbageSchedule::class => GarbageSchedulePolicy::class,
+        BusTime::class => BusTimePolicy::class,
     ];
 
     /**
@@ -58,7 +61,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('manage-schedules', function ($user) {
             return $user->hasAnyRole(['admin', 'worker']);
-            return $user->isAdmin();
         });
 
         Gate::define('view-statistics', function ($user) {

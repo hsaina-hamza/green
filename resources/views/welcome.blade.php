@@ -113,7 +113,7 @@
                     <h3 class="text-lg font-semibold">{{ $report->title ?? '' }}</h3>
                     <p class="text-sm">{{ $report->location ?? '' }}</p>
                     <p class="text-sm text-green-600 font-semibold">{{ $report->status ?? '' }}</p>
-                    <a href="{{ route('waste-reports.show', ['waste_report' => $report->id ?? 0]) }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View Report</a>
+                    <a href="{{ route('waste-reports.show', ['id' => $report->id ?? 0]) }}" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View Report</a>
                 </div>
                 @empty
                 <div class="col-span-3 text-center text-gray-500">

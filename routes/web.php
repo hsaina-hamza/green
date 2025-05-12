@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -20,7 +20,7 @@ use App\Http\Middleware\CheckRole;
 
 // Public routes (no authentication required)
 Route::get('/', function () {
-    $recentReports = \App\Models\WasteReport::with('site')
+    $recentReports = \App\Models\WasteReport::with('location')
         ->latest()
         ->take(3)
         ->get()
@@ -28,9 +28,9 @@ Route::get('/', function () {
             return (object)[
                 'id' => $report->id,
                 'title' => $report->title,
-                'location' => $report->site->name,
+                'location' => $report->location->name,
                 'status' => ucfirst($report->status),
-                'image_url' => $report->image_url
+                'image_url' => $report->image_path ?? null
             ];
         });
     
@@ -94,28 +94,6 @@ Route::get('/waste-reports', [WasteReportController::class, 'index'])->name('was
 Route::get('/waste-reports/{id}', [WasteReportController::class, 'show'])
     ->where('id', '[0-9]+')
     ->name('waste-reports.show');
-    // Profile Routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Dashboard Routes
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Authenticated Waste Report Routes
-    Route::get('/waste-reports/create', [WasteReportController::class, 'create'])->name('waste-reports.create');
-    Route::post('/waste-reports', [WasteReportController::class, 'store'])->name('waste-reports.store');
-    Route::get('/waste-reports/{waste_report}/edit', [WasteReportController::class, 'edit'])->name('waste-reports.edit');
-    Route::put('/waste-reports/{waste_report}', [WasteReportController::class, 'update'])->name('waste-reports.update');
-    Route::delete('/waste-reports/{waste_report}', [WasteReportController::class, 'destroy'])->name('waste-reports.destroy');
-
-    // Comment Routes
-    Route::post('/waste-reports/{waste_report}/comments', [CommentController::class, 'store'])
-        ->name('comments.store');
-    Route::patch('/comments/{comment}', [CommentController::class, 'update'])
-        ->name('comments.update');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
-        ->name('comments.destroy');
 
 // Routes that require worker or admin role
 Route::middleware(['auth', CheckRole::class . ':worker,admin'])->group(function () {

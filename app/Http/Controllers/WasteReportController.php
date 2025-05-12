@@ -159,7 +159,7 @@ class WasteReportController extends Controller
      */
     public function wasteMap()
     {
-        $reports = WasteReport::with(['site'])
+        $reports = WasteReport::with(['location'])
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->get()
@@ -169,10 +169,10 @@ class WasteReportController extends Controller
                     'title' => $report->title,
                     'type' => $report->waste_type,
                     'status' => ucfirst($report->status),
-                    'location' => $report->location,
-                    'latitude' => $report->latitude,
-                    'longitude' => $report->longitude,
-                    'url' => route('waste-reports.show', $report),
+                    'location' => $report->location->name,
+                    'latitude' => $report->location->latitude,
+                    'longitude' => $report->location->longitude,
+                    'url' => route('waste-reports.show', ['id' => $report->id]),
                 ];
             });
 

@@ -39,6 +39,7 @@ class BusTimesController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', BusTime::class);
         $locations = Location::all();
         return view('bus-times.create', compact('locations'));
     }
@@ -48,6 +49,7 @@ class BusTimesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', BusTime::class);
         $validated = $request->validate([
             'location_id' => 'required|exists:locations,id',
             'route' => 'required|string|max:255',
@@ -68,6 +70,7 @@ class BusTimesController extends Controller
      */
     public function edit(BusTime $busTime)
     {
+        $this->authorize('update', $busTime);
         $locations = Location::all();
         return view('bus-times.edit', compact('busTime', 'locations'));
     }
@@ -77,6 +80,7 @@ class BusTimesController extends Controller
      */
     public function update(Request $request, BusTime $busTime)
     {
+        $this->authorize('update', $busTime);
         $validated = $request->validate([
             'location_id' => 'required|exists:locations,id',
             'route' => 'required|string|max:255',
@@ -97,6 +101,7 @@ class BusTimesController extends Controller
      */
     public function destroy(BusTime $busTime)
     {
+        $this->authorize('delete', $busTime);
         $busTime->delete();
 
         return redirect()->route('bus-times.index')

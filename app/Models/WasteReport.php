@@ -37,6 +37,14 @@ class WasteReport extends Model
     }
 
     /**
+     * Get the site associated with the report.
+     */
+    public function site()
+    {
+        return $this->belongsTo(Site::class);
+    }
+
+    /**
      * Get the user who reported the waste.
      */
     public function user()
@@ -50,6 +58,14 @@ class WasteReport extends Model
     public function reporter()
     {
         return $this->belongsTo(User::class, 'reported_by');
+    }
+
+    /**
+     * Get the worker assigned to the report.
+     */
+    public function assignedWorker()
+    {
+        return $this->belongsTo(User::class, 'worker_id');
     }
 
     /**
