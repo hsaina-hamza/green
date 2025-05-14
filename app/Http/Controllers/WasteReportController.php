@@ -36,7 +36,7 @@ class WasteReportController extends Controller
     {
         $wasteTypes = WasteType::all();
         $locations = Location::all();
-        return view('waste-reports.create', compact('wasteTypes', 'locations'));
+        return view('waste-reports.create-with-roles', compact('wasteTypes', 'locations'));
     }
 
     public function store(Request $request)

@@ -5,7 +5,7 @@
                 {{ __('Garbage Collection Schedules') }}
             </h2>
             @can('create', App\Models\GarbageSchedule::class)
-                <a href="{{ route('schedules.create') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                <a href="{{ route('admin.schedules.create') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                     {{ __('Add New Schedule') }}
                 </a>
             @endcan
@@ -55,12 +55,12 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-2">
-                                                    <a href="{{ route('schedules.show', $schedule) }}" class="text-green-600 hover:text-green-900">View</a>
+                                                    <a href="{{ route('admin.schedules.show', $schedule) }}" class="text-green-600 hover:text-green-900">View</a>
                                                     @can('update', $schedule)
-                                                        <a href="{{ route('schedules.edit', $schedule) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
+                                                        <a href="{{ route('admin.schedules.edit', $schedule) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
                                                     @endcan
                                                     @can('delete', $schedule)
-                                                        <form action="{{ route('schedules.destroy', $schedule) }}" method="POST" class="inline">
+                                                        <form action="{{ route('admin.schedules.destroy', $schedule) }}" method="POST" class="inline">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this schedule?')">
@@ -117,7 +117,7 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-2">
-                                                    <a href="{{ route('schedules.show', $schedule) }}" class="text-green-600 hover:text-green-900">View</a>
+                                                    <a href="{{ route('admin.schedules.show', $schedule) }}" class="text-green-600 hover:text-green-900">View</a>
                                                 </div>
                                             </td>
                                         </tr>

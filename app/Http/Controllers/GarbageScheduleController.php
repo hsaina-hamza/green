@@ -56,7 +56,7 @@ class GarbageScheduleController extends BaseController
 
         $schedule = GarbageSchedule::create($validated);
 
-        return redirect()->route('schedules.show', $schedule)
+        return redirect()->route('admin.schedules.show', $schedule)
             ->with('success', 'Schedule created successfully.');
     }
 
@@ -90,7 +90,7 @@ class GarbageScheduleController extends BaseController
 
         $schedule->update($validated);
 
-        return redirect()->route('schedules.show', $schedule)
+        return redirect()->route('admin.schedules.show', $schedule)
             ->with('success', 'Schedule updated successfully.');
     }
 
@@ -100,7 +100,7 @@ class GarbageScheduleController extends BaseController
         
         $schedule->delete();
 
-        return redirect()->route('schedules.index')
+        return redirect()->route('admin.schedules.index')
             ->with('success', 'Schedule deleted successfully.');
     }
 

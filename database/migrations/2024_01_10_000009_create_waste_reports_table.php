@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('waste_reports', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->default('Untitled Report');
             $table->text('description');
             $table->string('type'); // general, recyclable, hazardous, organic
             $table->string('urgency_level'); // low, medium, high

@@ -1,38 +1,41 @@
-@php
-    $roleColors = [
-        'admin' => [
-            'bg' => 'bg-purple-50',
-            'border' => 'border-purple-200',
-            'text' => 'text-purple-700',
-            'button' => 'bg-purple-500 hover:bg-purple-600',
-            'focus' => 'focus:border-purple-500 focus:ring-purple-500',
-            'input-border' => 'border-purple-300',
-            'file' => 'file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100'
-        ],
-        'worker' => [
-            'bg' => 'bg-blue-50',
-            'border' => 'border-blue-200',
-            'text' => 'text-blue-700',
-            'button' => 'bg-blue-500 hover:bg-blue-600',
-            'focus' => 'focus:border-blue-500 focus:ring-blue-500',
-            'input-border' => 'border-blue-300',
-            'file' => 'file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'
-        ],
-        'user' => [
-            'bg' => 'bg-green-50',
-            'border' => 'border-green-200',
-            'text' => 'text-green-700',
-            'button' => 'bg-green-500 hover:bg-green-600',
-            'focus' => 'focus:border-green-500 focus:ring-green-500',
-            'input-border' => 'border-green-300',
-            'file' => 'file:bg-green-50 file:text-green-700 hover:file:bg-green-100'
-        ]
-    ];
+@props([
+    'type' => 'bg', // bg, border, text, button, focus, input-border, file, badge, link
+    'role' => null, // Optional override (admin, worker, user)
+    'intensity' => [ // Color intensity levels
+        'light' => '50',
+        'medium' => '200',
+        'dark' => '700'
+    ],
+    'darkMode' => true // Enable/disable dark mode variants
+])
 
-    $role = Auth::user()->isAdmin() ? 'admin' : (Auth::user()->isWorker() ? 'worker' : 'user');
-    $colors = $roleColors[$role];
+@php
+    // Determine role if not explicitly provided
+    $role = $role ?? (Auth::user()->isAdmin() ? 'admin' : (Auth::user()->isWorker() ? 'worker' : 'user'));
+    
+    // Define color palette for each role
+    $roleColors = [
+        'admin' => 'purple',
+        'worker' => 'blue',
+        'user' => 'green',
+        'default' => 'gray'
+    ];
+    
+    $color = $roleColors[$role] ?? $roleColors['default'];
+    
+    // Generate classes based on type
+    $classes = match($type) {
+        'bg' => "bg-{$color}-{$intensity['light']}" . ($darkMode ? " dark:bg-{$color}-900/20" : ""),
+        'border' => "border-{$color}-{$intensity['medium']}" . ($darkMode ? " dark:border-{$color}-700" : ""),
+        'text' => "text-{$color}-{$intensity['dark']}" . ($darkMode ? " dark:text-{$color}-300" : ""),
+        'button' => "bg-{$color}-500 hover:bg-{$color}-600 text-white",
+        'focus' => "focus:border-{$color}-500 focus:ring-{$color}-500",
+        'input-border' => "border-{$color}-300 focus:border-{$color}-500",
+        'file' => "file:bg-{$color}-{$intensity['light']} file:text-{$color}-{$intensity['dark']} hover:file:bg-{$color}-100",
+        'badge' => "bg-{$color}-{$intensity['light']} text-{$color}-{$intensity['dark']}",
+        'link' => "text-{$color}-600 hover:text-{$color}-800",
+        default => ''
+    };
 @endphp
 
-@props(['type' => 'bg'])
-
-{{ $colors[$type] }}
+{{ $classes }}

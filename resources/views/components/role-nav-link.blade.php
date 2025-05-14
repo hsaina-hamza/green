@@ -2,20 +2,27 @@
 
 @php
 $classes = ($active ?? false)
-    ? 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out ' . 
+    ? 'block w-full px-4 py-2 text-right text-sm leading-5 focus:outline-none transition duration-150 ease-in-out rounded-md ' . 
       (Auth::user()->role === 'admin' 
-        ? 'border-purple-400 text-purple-900 focus:border-purple-700' 
+        ? 'bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-purple-100' 
         : (Auth::user()->role === 'worker'
-            ? 'border-blue-400 text-blue-900 focus:border-blue-700'
-            : 'border-green-400 text-green-900 focus:border-green-700'))
-    : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out ' .
+            ? 'bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100'
+            : 'bg-green-100 text-green-900 dark:bg-green-900 dark:text-green-100'))
+    : 'block w-full px-4 py-2 text-right text-sm leading-5 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 transition duration-150 ease-in-out rounded-md ' .
       (Auth::user()->role === 'admin'
-        ? 'text-purple-500 hover:text-purple-700'
+        ? 'text-purple-700 hover:bg-purple-50 dark:text-purple-300 dark:hover:bg-purple-800'
         : (Auth::user()->role === 'worker'
-            ? 'text-blue-500 hover:text-blue-700'
-            : 'text-green-500 hover:text-green-700'));
+            ? 'text-blue-700 hover:bg-blue-50 dark:text-blue-300 dark:hover:bg-blue-800'
+            : 'text-green-700 hover:bg-green-50 dark:text-green-300 dark:hover:bg-green-800'));
 @endphp
 
-<a {{ $attributes->merge(['class' => $classes]) }}>
-    {{ $slot }}
+<a {{ $attributes->merge(['class' => $classes]) }} dir="rtl">
+    <div class="flex items-center justify-end space-x-2 space-x-reverse">
+        @if(isset($icon))
+            <span class="shrink-0">
+                {{ $icon }}
+            </span>
+        @endif
+        <span>{{ $slot }}</span>
+    </div>
 </a>

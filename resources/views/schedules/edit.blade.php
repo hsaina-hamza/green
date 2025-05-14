@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Edit Schedule') }}
             </h2>
-            <a href="{{ route('schedules.show', $schedule) }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+            <a href="{{ route('admin.schedules.show', $schedule) }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
                 {{ __('Back to Details') }}
             </a>
         </div>
@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('schedules.update', $schedule) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('admin.schedules.update', $schedule) }}" method="POST" class="space-y-6">
                         @csrf
                         @method('PATCH')
 
@@ -63,7 +63,7 @@
 
                         <div class="flex items-center gap-4">
                             <x-primary-button>{{ __('Update Schedule') }}</x-primary-button>
-                            <a href="{{ route('schedules.show', $schedule) }}" class="text-gray-600 hover:text-gray-900">{{ __('Cancel') }}</a>
+                            <a href="{{ route('admin.schedules.show', $schedule) }}" class="text-gray-600 hover:text-gray-900">{{ __('Cancel') }}</a>
                         </div>
                     </form>
                 </div>

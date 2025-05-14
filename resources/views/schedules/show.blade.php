@@ -6,11 +6,11 @@
             </h2>
             <div class="flex space-x-4">
                 @can('update', $schedule)
-                    <a href="{{ route('schedules.edit', $schedule) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <a href="{{ route('admin.schedules.edit', $schedule) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         {{ __('Edit Schedule') }}
                     </a>
                 @endcan
-                <a href="{{ route('schedules.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                <a href="{{ route('admin.schedules.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
                     {{ __('Back to List') }}
                 </a>
             </div>
@@ -91,7 +91,7 @@
 
                     @can('delete', $schedule)
                         <div class="mt-6 pt-6 border-t border-gray-200">
-                            <form action="{{ route('schedules.destroy', $schedule) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.schedules.destroy', $schedule) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <x-danger-button onclick="return confirm('Are you sure you want to delete this schedule?')">

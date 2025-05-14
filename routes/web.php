@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -8,6 +8,7 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\GarbageScheduleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BusTimesController;
+use App\Http\Controllers\WasteMapController;
 use App\Http\Controllers\Admin\BusScheduleController as AdminBusScheduleController;
 use App\Http\Controllers\Worker\BusScheduleController as WorkerBusScheduleController;
 use App\Http\Middleware\CheckRole;
@@ -38,8 +39,11 @@ Route::get('/', function () {
 })->name('home');
 
 // Public Information Routes
-Route::get('/conservation-tips', [DashboardController::class, 'conservationTips'])->name('conservation.tips');
-Route::get('/waste-map', [WasteReportController::class, 'wasteMap'])->name('waste-map');
+Route::get('/terms', function () {
+    return view('terms');
+})->name('terms');
+Route::get('/conservation-tips', [DashboardController::class, 'conservationTips'])->name('conservationTips.tips');
+Route::get('/waste-map', [WasteMapController::class, 'index'])->name('waste-map');
 Route::get('/bus-times', [BusTimesController::class, 'index'])->name('bus-times.index');
 
 // Protected Bus Times Management Routes
@@ -115,6 +119,7 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->prefix('admin')->name(
     Route::delete('/bus-schedules/{busSchedule}', [AdminBusScheduleController::class, 'destroy'])->name('bus-schedules.destroy');
 
     // Admin Site Routes
+    Route::get('/sites', [SiteController::class, 'index'])->name('sites.index');
     Route::get('/sites/create', [SiteController::class, 'create'])->name('sites.create');
     Route::post('/sites', [SiteController::class, 'store'])->name('sites.store');
     Route::get('/sites/{site}/edit', [SiteController::class, 'edit'])->name('sites.edit');
@@ -122,8 +127,10 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->prefix('admin')->name(
     Route::delete('/sites/{site}', [SiteController::class, 'destroy'])->name('sites.destroy');
 
     // Admin Schedule Routes
+    Route::get('/schedules', [GarbageScheduleController::class, 'index'])->name('schedules.index');
     Route::get('/schedules/create', [GarbageScheduleController::class, 'create'])->name('schedules.create');
     Route::post('/schedules', [GarbageScheduleController::class, 'store'])->name('schedules.store');
+    Route::get('/schedules/{schedule}', [GarbageScheduleController::class, 'show'])->name('schedules.show');
     Route::get('/schedules/{schedule}/edit', [GarbageScheduleController::class, 'edit'])->name('schedules.edit');
     Route::put('/schedules/{schedule}', [GarbageScheduleController::class, 'update'])->name('schedules.update');
     Route::delete('/schedules/{schedule}', [GarbageScheduleController::class, 'destroy'])->name('schedules.destroy');

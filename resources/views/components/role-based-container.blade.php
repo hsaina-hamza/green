@@ -1,45 +1,45 @@
-@props(['type' => 'bg'])
+@props([
+    'type' => 'bg', // 'bg', 'border', 'text', 'button', 'input', 'file', 'badge'
+    'role' => Auth::user()->role ?? 'default', // Allow override
+    'intensity' => '500', // Color intensity (100-900)
+    'hoverIntensity' => '600', // Hover color intensity
+    'focusIntensity' => '500' // Focus color intensity
+])
 
 @php
-$classes = match($type) {
-    'bg' => match(Auth::user()->role) {
-        'admin' => 'bg-purple-50',
-        'worker' => 'bg-blue-50',
-        'user' => 'bg-green-50',
-        default => 'bg-gray-50'
-    },
-    'border' => match(Auth::user()->role) {
-        'admin' => 'border-purple-200',
-        'worker' => 'border-blue-200',
-        'user' => 'border-green-200',
-        default => 'border-gray-200'
-    },
-    'text' => match(Auth::user()->role) {
-        'admin' => 'text-purple-700',
-        'worker' => 'text-blue-700',
-        'user' => 'text-green-700',
-        default => 'text-gray-700'
-    },
-    'button' => match(Auth::user()->role) {
-        'admin' => 'bg-purple-500 hover:bg-purple-600',
-        'worker' => 'bg-blue-500 hover:bg-blue-600',
-        'user' => 'bg-green-500 hover:bg-green-600',
-        default => 'bg-gray-500 hover:bg-gray-600'
-    },
-    'input' => match(Auth::user()->role) {
-        'admin' => 'border-purple-300 focus:border-purple-500 focus:ring-purple-500',
-        'worker' => 'border-blue-300 focus:border-blue-500 focus:ring-blue-500',
-        'user' => 'border-green-300 focus:border-green-500 focus:ring-green-500',
-        default => 'border-gray-300 focus:border-gray-500 focus:ring-gray-500'
-    },
-    'file' => match(Auth::user()->role) {
-        'admin' => 'file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100',
-        'worker' => 'file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100',
-        'user' => 'file:bg-green-50 file:text-green-700 hover:file:bg-green-100',
-        default => 'file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100'
-    },
-    default => ''
-};
+    // Define color mappings for each role
+    $roleColors = [
+        'admin' => 'purple',
+        'worker' => 'blue',
+        'user' => 'green',
+        'default' => 'gray'
+    ];
+
+    // Get the base color for the current role
+    $color = $roleColors[$role] ?? $roleColors['default'];
+
+    // Generate classes based on type
+    $classes = match($type) {
+        'bg' => "bg-{$color}-50 dark:bg-{$color}-900/20",
+        'border' => "border-{$color}-200 dark:border-{$color}-700",
+        'text' => "text-{$color}-700 dark:text-{$color}-300",
+        'button' => "bg-{$color}-{$intensity} hover:bg-{$color}-{$hoverIntensity} 
+                    focus:bg-{$color}-{$focusIntensity} text-white",
+        'input' => "border-{$color}-300 focus:border-{$color}-{$focusIntensity} 
+                   focus:ring-{$color}-{$focusIntensity}",
+        'file' => "file:bg-{$color}-50 file:text-{$color}-700 hover:file:bg-{$color}-100 
+                  dark:file:bg-{$color}-900/30 dark:file:text-{$color}-300",
+        'badge' => "bg-{$color}-100 text-{$color}-800 dark:bg-{$color}-900/30 
+                   dark:text-{$color}-200",
+        'link' => "text-{$color}-600 hover:text-{$color}-800 dark:text-{$color}-400 
+                  dark:hover:text-{$color}-300",
+        default => ''
+    };
+
+    // Add transition for interactive elements
+    if (in_array($type, ['button', 'input', 'file', 'link'])) {
+        $classes .= ' transition-colors duration-200 ease-in-out';
+    }
 @endphp
 
 <div {{ $attributes->merge(['class' => $classes]) }}>

@@ -40,7 +40,10 @@ class WasteTypeSeeder extends Seeder
         ];
 
         foreach ($wasteTypes as $type) {
-            WasteType::create($type);
+            WasteType::firstOrCreate(
+                ['name' => $type['name']],
+                ['description' => $type['description']]
+            );
         }
     }
 }
