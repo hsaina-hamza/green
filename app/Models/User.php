@@ -120,6 +120,10 @@ class User extends Authenticatable
     {
         return $this->hasRole('worker');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'reported_by');
+    }
 
     /**
      * Check if the user is a regular user.
@@ -197,4 +201,10 @@ class User extends Authenticatable
     {
         $this->attributes['role'] = $value ? strtolower(trim($value)) : null;
     }
+    public function assignedWorker()
+{
+    return $this->belongsTo(User::class, 'assigned_worker_id');
+}
+
+
 }

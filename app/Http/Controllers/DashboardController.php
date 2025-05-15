@@ -42,8 +42,8 @@ class DashboardController extends BaseController
         }
 
         if ($user->isUser()) {
-            $stats['my_reports'] = WasteReport::where('user_id', $user->id)->count();
-            $stats['my_pending_reports'] = WasteReport::where('user_id', $user->id)
+            $stats['my_reports'] = WasteReport::where('reported_by', $user->id)->count();
+            $stats['my_pending_reports'] = WasteReport::where('reported_by', $user->id)
                 ->where('status', 'pending')
                 ->count();
         }
@@ -58,7 +58,7 @@ class DashboardController extends BaseController
         if ($user->isWorker()) {
             $query->where('worker_id', $user->id);
         } elseif ($user->isUser()) {
-            $query->where('user_id', $user->id);
+            $query->where('reported_by', $user->id);
         }
 
         return $query->latest()->take(5)->get();

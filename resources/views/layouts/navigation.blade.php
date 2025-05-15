@@ -11,7 +11,8 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:mr-10 sm:flex">
+                <div class="hidden space-x-reverse space-x-8 sm:-my-px sm:mr-10 sm:flex flex-row-reverse">
+                    <!-- Public Routes -->
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         الرئيسية
                     </x-nav-link>
@@ -24,15 +25,48 @@
                     <x-nav-link :href="route('bus-times.index')" :active="request()->routeIs('bus-times.*')">
                         مواعيد الحافلات
                     </x-nav-link>
-                    <x-nav-link :href="route('waste-reports.create')" :active="request()->routeIs('waste-reports.create')">
-                        الإبلاغ عن نفايات
+                    <x-nav-link :href="route('sites.index')" :active="request()->routeIs('sites.*')">
+                        المواقع
                     </x-nav-link>
+                    <x-nav-link :href="route('schedules.index')" :active="request()->routeIs('schedules.*')">
+                        جداول النظافة
+                    </x-nav-link>
+
+                    @auth
+                        <x-nav-link :href="route('waste-reports.create')" :active="request()->routeIs('waste-reports.create')">
+                            الإبلاغ عن نفايات
+                        </x-nav-link>
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            لوحة التحكم
+                        </x-nav-link>
+
+                        @if(Auth::user()->hasRole('admin'))
+                            <x-nav-link :href="route('admin.statistics')" :active="request()->routeIs('admin.statistics')">
+                                الإحصائيات
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.sites.index')" :active="request()->routeIs('admin.sites.*')">
+                                إدارة المواقع
+                            </x-nav-link>
+                            <x-nav-link :href="route('admin.schedules.index')" :active="request()->routeIs('admin.schedules.*')">
+                                إدارة الجداول
+                            </x-nav-link>
+                        @endif
+
+                        @if(Auth::user()->hasRole('worker'))
+                            <x-nav-link :href="route('worker.bus-schedules.index')" :active="request()->routeIs('worker.bus-schedules.*')">
+                                جداول العمل
+                            </x-nav-link>
+                            <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
+                                الإحصائيات
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:mr-6">
-                <x-dropdown align="left" width="48">
+                <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name ?? 'الحساب' }}</div>
@@ -89,6 +123,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            <!-- Public Routes -->
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                 الرئيسية
             </x-responsive-nav-link>
@@ -101,9 +136,42 @@
             <x-responsive-nav-link :href="route('bus-times.index')" :active="request()->routeIs('bus-times.*')">
                 مواعيد الحافلات
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('waste-reports.create')" :active="request()->routeIs('waste-reports.create')">
-                الإبلاغ عن نفايات
+            <x-responsive-nav-link :href="route('sites.index')" :active="request()->routeIs('sites.*')">
+                المواقع
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('schedules.index')" :active="request()->routeIs('schedules.*')">
+                جداول النظافة
+            </x-responsive-nav-link>
+
+            @auth
+                <x-responsive-nav-link :href="route('waste-reports.create')" :active="request()->routeIs('waste-reports.create')">
+                    الإبلاغ عن نفايات
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    لوحة التحكم
+                </x-responsive-nav-link>
+
+                @if(Auth::user()->hasRole('admin'))
+                    <x-responsive-nav-link :href="route('admin.statistics')" :active="request()->routeIs('admin.statistics')">
+                        الإحصائيات
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.sites.index')" :active="request()->routeIs('admin.sites.*')">
+                        إدارة المواقع
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.schedules.index')" :active="request()->routeIs('admin.schedules.*')">
+                        إدارة الجداول
+                    </x-responsive-nav-link>
+                @endif
+
+                @if(Auth::user()->hasRole('worker'))
+                    <x-responsive-nav-link :href="route('worker.bus-schedules.index')" :active="request()->routeIs('worker.bus-schedules.*')">
+                        جداول العمل
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
+                        الإحصائيات
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->

@@ -86,7 +86,7 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $report->user ? $report->user->name : 'غير معروف' }}
+                                            {{ $report->reporter ? $report->reporter->name : 'غير معروف' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" dir="ltr">
                                             {{ $report->created_at->format('Y/m/d') }}

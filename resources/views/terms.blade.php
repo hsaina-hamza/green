@@ -71,8 +71,8 @@
                             إذا كان لديك أي أسئلة حول هذه الشروط، يرجى التواصل معنا عبر:
                         </p>
                         <ul class="list-disc mr-6 mt-2 text-gray-600">
-                            <li>البريد الإلكتروني: contact@greenmorocco.org</li>
-                            <li>الهاتف: (+212) 123-456-789</li>
+                            <li>البريد الإلكتروني: hhsaina@greenmorocco.org</li>
+                            <li>الهاتف: (+212) 718-324-286</li>
                         </ul>
                     </section>
                 </div>

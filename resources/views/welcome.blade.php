@@ -157,7 +157,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <h4 class="text-xl font-semibold mb-4">GreenMorocco</h4>
-                    <p class="text-gray-300">مكرسة للحفاظ على البيئة وإدارة النفايات بشكل صحيح من أجل مستقبل أنظف وأكثر اخضراراً.</p>
+                    <p class="text-gray-300">مكرّسة للحفاظ على البيئة وإدارة النفايات بشكلٍ صحيح، من أجل مستقبل أنظف وأكثر اخضرارًا.</p>
                 </div>
                 <div>
                     <h5 class="text-lg font-semibold mb-4 border-b pb-2 border-green-700">روابط سريعة</h5>
@@ -185,17 +185,17 @@
                     <ul class="space-y-3">
                         <li>
                             <a href="mailto:contact@greenmorocco.org" class="text-gray-300 hover:text-white transition flex items-center">
-                                <i class="fas fa-envelope ml-2"></i>contact@greenmorocco.org
+                                <i class="fas fa-envelope ml-2"></i>hhsaina@greenmorocco.org
                             </a>
                         </li>
                         <li>
                             <a href="tel:+212123456789" class="text-gray-300 hover:text-white transition flex items-center">
-                                <i class="fas fa-phone ml-2"></i>(+212) 123-456-789
+                                <i class="fas fa-phone ml-2"></i>(+212) 718-324-286
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-gray-300 hover:text-white transition flex items-center">
-                                <i class="fas fa-map-marker-alt ml-2"></i>123 شارع الأخضر، الرباط
+                                <i class="fas fa-map-marker-alt ml-2"></i>123 شارع الأخضر، كلميم
                             </a>
                         </li>
                     </ul>

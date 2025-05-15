@@ -12,12 +12,14 @@ class WasteReport extends Model
     protected $fillable = [
         'waste_type_id',
         'location_id',
+        'site_id',
         'quantity',
         'unit',
         'description',
         'reported_by',
         'status',
         'image_path',
+        'urgency_level',
     ];
 
     /**
@@ -27,6 +29,7 @@ class WasteReport extends Model
     {
         return $this->belongsTo(WasteType::class);
     }
+    
 
     /**
      * Get the location associated with the report.
@@ -44,13 +47,6 @@ class WasteReport extends Model
         return $this->belongsTo(Site::class);
     }
 
-    /**
-     * Get the user who reported the waste.
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'reported_by');
-    }
 
     /**
      * Get the reporter of the waste report.
@@ -59,6 +55,7 @@ class WasteReport extends Model
     {
         return $this->belongsTo(User::class, 'reported_by');
     }
+    
 
     /**
      * Get the worker assigned to the report.

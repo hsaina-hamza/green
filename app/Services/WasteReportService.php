@@ -142,7 +142,7 @@ class WasteReportService extends BaseService
     {
         return $this->getPaginated(
             WasteReport::class,
-            ['user_id' => $user->id],
+            ['reported_by' => $user->id],
             ['site', 'assignedWorker'],
             $perPage
         );

@@ -60,9 +60,11 @@ class WasteReportController extends Controller
             'quantity' => $validated['quantity'],
             'unit' => $validated['unit'],
             'location_id' => $validated['location_id'],
+            'site_id' => null,
             'description' => $validated['description'] ?? null,
             'reported_by' => Auth::id(),
             'status' => 'pending',
+            'urgency_level' => 'normal',
             'image_path' => $imagePath,
         ]);
 
