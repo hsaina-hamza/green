@@ -22,7 +22,11 @@ class User extends Authenticatable
         'password',
         'role',
         'phone_number',
+        'is_active',
+        'last_login_at',
     ];
+
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -42,6 +46,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_active' => 'boolean',
+        'last_login_at' => 'datetime',
     ];
 
     /**

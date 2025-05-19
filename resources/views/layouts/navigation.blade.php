@@ -41,6 +41,9 @@
                         </x-nav-link>
 
                         @if(Auth::user()->hasRole('admin'))
+                            <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                                إدارة المستخدمين
+                            </x-nav-link>
                             <x-nav-link :href="route('admin.statistics')" :active="request()->routeIs('admin.statistics')">
                                 الإحصائيات
                             </x-nav-link>
@@ -152,6 +155,9 @@
                 </x-responsive-nav-link>
 
                 @if(Auth::user()->hasRole('admin'))
+                    <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                        إدارة المستخدمين
+                    </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.statistics')" :active="request()->routeIs('admin.statistics')">
                         الإحصائيات
                     </x-responsive-nav-link>

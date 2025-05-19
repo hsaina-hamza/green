@@ -6,11 +6,11 @@
                     <div class="flex justify-between items-center mb-8">
                         <h2 class="text-2xl font-bold text-gray-800 flex items-center">
                             <i class="fas fa-user-edit ml-3 text-blue-500"></i>
-                            تعديل المستخدم: {{ $user->name }}
+                            تعديل الموظف: {{ $user->name }}
                         </h2>
                         <a href="{{ route('admin.users.index') }}" class="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition">
                             <i class="fas fa-arrow-right ml-2"></i>
-                            العودة إلى المستخدمين
+                            العودة إلى الموظفين
                         </a>
                     </div>
 
@@ -69,10 +69,15 @@
                                 <select name="role" id="role" required
                                         class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-3">
                                     <option value="">اختر دورًا</option>
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role->name }}" 
-                                                {{ old('role', $user->roles->first()?->name) == $role->name ? 'selected' : '' }}>
-                                            {{ $role->name == 'admin' ? 'مدير' : ($role->name == 'worker' ? 'عامل' : 'مستخدم') }}
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role }}" {{ old('role', $user->role) == $role ? 'selected' : '' }}>
+                                            @if($role == 'admin')
+                                                مدير
+                                            @elseif($role == 'worker')
+                                                عامل
+                                            @else
+                                                مستخدم
+                                            @endif
                                         </option>
                                     @endforeach
                                 </select>
@@ -88,7 +93,7 @@
                         <div class="flex justify-end pt-4">
                             <button type="submit" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition">
                                 <i class="fas fa-save ml-2"></i>
-                                تحديث المستخدم
+                                تحديث الموظف
                             </button>
                         </div>
                     </form>

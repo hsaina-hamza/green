@@ -6,11 +6,13 @@ use App\Models\BusTime;
 use App\Models\Comment;
 use App\Models\GarbageSchedule;
 use App\Models\Site;
+use App\Models\User;
 use App\Models\WasteReport;
 use App\Policies\BusTimePolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\GarbageSchedulePolicy;
 use App\Policies\SitePolicy;
+use App\Policies\UserPolicy;
 use App\Policies\WasteReportPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -28,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         Site::class => SitePolicy::class,
         GarbageSchedule::class => GarbageSchedulePolicy::class,
         BusTime::class => BusTimePolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**

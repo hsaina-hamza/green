@@ -110,6 +110,9 @@ Route::middleware(['auth', CheckRole::class . ':worker,admin'])->group(function 
 Route::middleware(['auth', CheckRole::class . ':admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/statistics', [DashboardController::class, 'statistics'])->name('statistics');
     
+    // User Management Routes
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    
     // Admin Bus Schedule Routes
     Route::get('/bus-schedules', [AdminBusScheduleController::class, 'index'])->name('bus-schedules.index');
     Route::get('/bus-schedules/create', [AdminBusScheduleController::class, 'create'])->name('bus-schedules.create');
