@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
-                        <img src="{{ asset('images/report-waste.svg') }}" class="block h-9 w-auto" alt="الشعار" />
+                        <img src="{{ asset('images/ozen.png') }}" class="block h-9 w-auto" alt="" />
                     </a>
                 </div>
 

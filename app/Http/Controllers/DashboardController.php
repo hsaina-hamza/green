@@ -53,7 +53,7 @@ class DashboardController extends BaseController
 
     private function getRecentReports($user)
     {
-        $query = WasteReport::with(['user', 'site', 'assignedWorker']);
+        $query = WasteReport::with(['reporter', 'site', 'assignedWorker']);
 
         if ($user->isWorker()) {
             $query->where('worker_id', $user->id);

@@ -29,6 +29,6 @@
         @endif
     </table>
 
-    <a href="{{ route('reports.index') }}" class="btn btn-secondary">عودة إلى قائمة البلاغات</a>
+<a href="{{ route('waste-reports.index') }}" class="btn btn-secondary">عودة إلى قائمة البلاغات</a>
 </div>
 @endsection

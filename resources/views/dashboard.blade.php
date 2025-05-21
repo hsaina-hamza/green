@@ -112,7 +112,7 @@
                                     <div class="flex justify-between items-start">
                                         <div class="flex-1">
                                             <div class="flex items-center justify-between">
-                                                <h4 class="font-medium text-gray-900">{{ $report->title }}</h4>
+                                                <h4 class="font-medium text-gray-900">{{ $report->wasteType ? $report->wasteType->name : 'بلاغ نفايات' }}</h4>
                                                 <span class="text-xs px-2 py-1 rounded-full 
                                                     @if($report->status == 'pending') bg-yellow-100 text-yellow-800
                                                     @elseif($report->status == 'in_progress') bg-blue-100 text-blue-800
@@ -123,7 +123,7 @@
                                             </div>
                                             <div class="mt-2 flex items-center text-sm text-gray-500">
                                                 <i class="fas fa-map-marker-alt ml-2 text-green-500"></i>
-                                                <span>{{ $report->site->name }}</span>
+                                                <span>{{ $report->site ? $report->site->name : ($report->location ? $report->location->name : 'غير محدد') }}</span>
                                             </div>
                                             <div class="mt-1 text-xs text-gray-400">
                                                 <i class="far fa-clock ml-2"></i>

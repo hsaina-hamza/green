@@ -6,11 +6,11 @@
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-800">
                             <i class="fas fa-user-plus mr-2 text-blue-500"></i>
-                            إضافة موظف جديد
+                            إضافة مستخدم جديد
                         </h2>
                         <a href="{{ route('admin.users.index') }}" class="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300">
                             <i class="fas fa-arrow-right ml-2"></i>
-                            العودة للموظفين
+                            العودة للقائمة
                         </a>
                     </div>
 
@@ -91,7 +91,7 @@
                                             @if($role == 'admin')
                                                 مدير
                                             @elseif($role == 'worker')
-                                                عامل
+                                                موظف
                                             @else
                                                 مستخدم
                                             @endif

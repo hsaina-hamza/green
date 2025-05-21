@@ -119,7 +119,7 @@
                                         <div class="h-8 w-1 bg-gradient-to-b from-blue-500 to-blue-300 rounded-full mr-3"></div>
                                         <h4 class="text-lg font-semibold text-blue-800">{{ __('تحديث حالة البلاغ') }}</h4>
                                     </div>
-                                    <form action="{{ route('waste-reports.update-status', $wasteReport) }}" method="POST" class="flex flex-col sm:flex-row gap-3">
+                                    <form action="{{ route('admin.waste-reports.update-status', $wasteReport) }}" method="POST" class="flex flex-col sm:flex-row gap-3">
                                         @csrf
                                         @method('PATCH')
                                         <select name="status" class="rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm w-full">

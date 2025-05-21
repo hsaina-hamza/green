@@ -10,7 +10,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('reports.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl shadow p-6">
+        <form action="{{ route('waste-reports.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl shadow p-6">
             @csrf
 
             <!-- Waste Type -->

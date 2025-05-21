@@ -19,7 +19,7 @@ class WasteReportSeeder extends Seeder
         // Get required models
         $sites = Site::all();
         $users = User::all();
-        $workers = User::where('role', 'worker')->get();
+        $workers = User::role('worker')->get();
         $locations = Location::all();
         $wasteTypes = WasteType::all();
 
@@ -63,11 +63,12 @@ class WasteReportSeeder extends Seeder
                     'site_id' => $site->id,
                     'location_id' => $locations->random()->id,
                     'waste_type_id' => $wasteTypes->random()->id,
-                    'user_id' => $users->random()->id,
+                    'reported_by' => $users->random()->id,
                     'assigned_worker_id' => $worker ? $worker->id : null,
-                    'estimated_size' => rand(1, 100),
+                    'quantity' => rand(1, 100),
+                    'unit' => 'cubic_meters',
                     'location_details' => "Near the {$site->name} main entrance",
-                    'image_url' => null,
+                    'image_path' => null,
                     'created_at' => now()->subDays(rand(1, 30)),
                     'updated_at' => now()->subDays(rand(0, 30)),
                 ]);

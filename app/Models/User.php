@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Traits\ManagesNotifications;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, ManagesNotifications;
+    use HasFactory, Notifiable, ManagesNotifications, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -50,16 +51,6 @@ class User extends Authenticatable
         'last_login_at' => 'datetime',
     ];
 
-    /**
-     * Valid user roles.
-     *
-     * @var array<string>
-     */
-    public const ROLES = [
-        'admin',
-        'worker',
-        'user',
-    ];
 
     /**
      * Get the user's notification preferences.
@@ -94,54 +85,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user has a specific role.
-     *
-     * @param string $role
-     * @return bool
-     */
-    public function hasRole(string $role): bool
-    {
-        if ($this->role === null) {
-            return false;
-        }
-        return strtolower(trim($this->role)) === strtolower(trim($role));
-    }
-
-    /**
-     * Check if the user is an admin.
-     *
-     * @return bool
-     */
-    public function isAdmin(): bool
-    {
-        return $this->hasRole('admin');
-    }
-
-    /**
-     * Check if the user is a worker.
-     *
-     * @return bool
-     */
-    public function isWorker(): bool
-    {
-        return $this->hasRole('worker');
-    }
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'reported_by');
-    }
-
-    /**
-     * Check if the user is a regular user.
-     *
-     * @return bool
-     */
-    public function isUser(): bool
-    {
-        return $this->hasRole('user');
-    }
-
-    /**
      * Get the waste reports created by the user.
      */
     public function wasteReports()
@@ -166,46 +109,38 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user has any of the given roles.
+     * Check if the user is an admin.
      *
-     * @param array|string $roles
      * @return bool
      */
-    public function hasAnyRole($roles): bool
+    public function isAdmin(): bool
     {
-        if (!is_array($roles)) {
-            $roles = [$roles];
-        }
-
-        foreach ($roles as $role) {
-            if ($this->hasRole($role)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->hasRole('admin');
     }
 
     /**
-     * Get the role attribute.
+     * Check if the user is a worker.
      *
-     * @param string|null $value
-     * @return string|null
+     * @return bool
      */
-    public function getRoleAttribute(?string $value): ?string
+    public function isWorker(): bool
     {
-        return $value ? strtolower(trim($value)) : null;
+        return $this->hasRole('worker');
     }
 
     /**
-     * Set the role attribute.
+     * Check if the user is a regular user.
      *
-     * @param string|null $value
-     * @return void
+     * @return bool
      */
-    public function setRoleAttribute(?string $value): void
+    public function isUser(): bool
     {
-        $this->attributes['role'] = $value ? strtolower(trim($value)) : null;
+        return $this->hasRole('user');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'reported_by');
     }
     public function assignedWorker()
 {

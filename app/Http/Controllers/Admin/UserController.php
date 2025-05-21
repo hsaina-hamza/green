@@ -6,12 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(10);
+        // Get all users except the current admin
+        $users = User::where('id', '!=', Auth::id())->get();
         return view('admin.users.index', compact('users'));
     }
 
@@ -24,11 +28,11 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'phone_number' => 'nullable|string|max:20',
-            'role' => 'required|string|in:' . implode(',', User::ROLES),
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+            'phone_number' => ['nullable', 'string', 'max:20'],
+            'role' => ['required', 'string', 'in:' . implode(',', User::ROLES)],
         ]);
 
         $user = User::create([
@@ -36,56 +40,65 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'phone_number' => $validated['phone_number'],
-            'role' => $validated['role'],
         ]);
 
+        $user->assignRole($validated['role']);
+
         return redirect()->route('admin.users.index')
-            ->with('success', 'تم إنشاء الموظف بنجاح');
+            ->with('success', 'تم إنشاء الحساب بنجاح');
     }
 
     public function edit(User $user)
     {
+        if ($user->id === Auth::id()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'لا يمكنك تعديل حسابك من هنا');
+        }
+
         $roles = User::ROLES;
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'phone_number' => 'nullable|string|max:20',
-            'role' => 'required|string|in:' . implode(',', User::ROLES),
-        ]);
-
-        $updateData = [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'phone_number' => $validated['phone_number'],
-            'role' => $validated['role'],
-        ];
-
-        if (!empty($validated['password'])) {
-            $updateData['password'] = Hash::make($validated['password']);
+        if ($user->id === Auth::id()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'لا يمكنك تعديل حسابك من هنا');
         }
 
-        $user->update($updateData);
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'confirmed', Password::defaults()],
+            'phone_number' => ['nullable', 'string', 'max:20'],
+            'role' => ['required', 'string', 'in:' . implode(',', User::ROLES)],
+        ]);
+
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone_number = $validated['phone_number'];
+
+        if (isset($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
+
+        $user->syncRoles([$validated['role']]);
+        $user->save();
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'تم تحديث الموظف بنجاح');
+            ->with('success', 'تم تحديث البيانات بنجاح');
     }
 
-    public function destroy(Request $request, User $user)
+    public function destroy(User $user)
     {
-        if ($user->getKey() === $request->user()->getKey()) {
+        if ($user->id === Auth::id()) {
             return redirect()->route('admin.users.index')
-                ->with('error', 'لا يمكنك حذف حسابك كموظف');
+                ->with('error', 'لا يمكنك حذف حسابك الخاص');
         }
 
         $user->delete();
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'تم حذف الموظف بنجاح');
+            ->with('success', 'تم حذف الحساب بنجاح');
     }
 }

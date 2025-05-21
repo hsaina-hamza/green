@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenMorocco - من أجل بيئة نظيفة</title>
+    <link rel="icon" type="image/ozen.png" href="hsaina.png">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -140,7 +141,7 @@
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
                     <a href="{{ route('home') }}" class="flex items-center">
-                        {{-- <img src="{{ asset('images/ozen.png') }}" class="h-10 w-10" alt="GM"> --}}
+                        <img src="{{ asset('images/ozen.png') }}" class="h-10 w-10" alt="GM">
                         <span class="mr-2 text-2xl font-bold hidden md:block">GM</span>
                     </a>
                 </div>

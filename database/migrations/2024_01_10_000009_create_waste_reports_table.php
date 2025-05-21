@@ -21,7 +21,8 @@ return new class extends Migration
             $table->foreignId('site_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('worker_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->integer('estimated_size')->nullable(); // in cubic meters
+            $table->decimal('quantity', 10, 2)->nullable();
+            $table->string('unit')->nullable();
             $table->string('location_details')->nullable();
             $table->string('image_url')->nullable();
             $table->timestamps();

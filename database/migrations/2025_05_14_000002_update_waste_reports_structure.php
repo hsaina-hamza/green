@@ -37,6 +37,7 @@ return new class extends Migration
             if (!Schema::hasColumn('waste_reports', 'reported_by')) {
                 $table->foreignId('reported_by')->nullable()->constrained('users')->onDelete('set null');
             }
+            // worker_id is already created in the initial migration
         });
     }
 

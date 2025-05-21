@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Site;
+use App\Models\WasteReport;
+use App\Models\GarbageSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -30,6 +32,10 @@ class SiteController extends BaseController
      */
     public function map()
     {
+        $totalSites = Site::count();
+        $todayReports = \App\Models\WasteReport::whereDate('created_at', today())->count();
+        $activeSchedules = \App\Models\GarbageSchedule::where('status', 'active')->count();
+        
         $sites = Site::withCount(['wasteReports', 'garbageSchedules'])
             ->with(['activeWasteReports', 'upcomingSchedules'])
             ->get()
@@ -48,10 +54,11 @@ class SiteController extends BaseController
                     'google_maps_url' => $site->google_maps_url,
                     'has_active_reports' => $site->hasActiveReports(),
                     'has_upcoming_schedules' => $site->hasUpcomingSchedules(),
+                    'updated_at' => $site->updated_at ? $site->updated_at->format('Y-m-d H:i:s') : null,
                 ];
             });
 
-        return view('sites.map', compact('sites'));
+        return view('sites.map', compact('sites', 'totalSites', 'todayReports', 'activeSchedules'));
     }
 
     /**

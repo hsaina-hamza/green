@@ -606,7 +606,7 @@
                             <div><strong>تاريخ البلاغ:</strong> {{ $report->created_at->format('Y-m-d') }}</div>
                         </div>
                         <div class="mt-3 text-left">
-                            <a href="{{ route('reports.show', $report->id) }}" class="text-sm bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded inline-block">
+<a href="{{ route('waste-reports.show', $report->id) }}" class="text-sm bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded inline-block">
                                 <i class="fas fa-eye ml-1"></i> عرض التفاصيل
                             </a>
                         </div>

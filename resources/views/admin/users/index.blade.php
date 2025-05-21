@@ -6,11 +6,11 @@
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-800">
                             <i class="fas fa-users mr-2 text-blue-500"></i>
-                            إدارة الموظفين
+                            إدارة المستخدمين
                         </h2>
                         <a href="{{ route('admin.users.create') }}" class="flex items-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">
                             <i class="fas fa-plus mr-2"></i>
-                            إضافة موظف جديد
+                            إضافة مستخدم جديد
                         </a>
                     </div>
 
@@ -67,13 +67,9 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap">
                                             <div class="text-sm leading-5">
-                                                @if($user->role === 'admin')
+                                                @if($user->hasRole('admin'))
                                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                                         مدير
-                                                    </span>
-                                                @elseif($user->role === 'worker')
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                        عامل
                                                     </span>
                                                 @else
                                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
@@ -92,7 +88,7 @@
                                                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline-block">
                                                         @csrf
                                                         @method('DELETE')
-'هل أنت متأكد من حذف هذا الموظف؟'
+                                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟')">
                                                             <i class="fas fa-trash"></i>
                                                             حذف
                                                         </button>

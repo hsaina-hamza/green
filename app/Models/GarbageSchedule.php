@@ -23,6 +23,7 @@ class GarbageSchedule extends Model
         'scheduled_time',
         'frequency',
         'notes',
+        'status',
     ];
 
     /**
@@ -69,6 +70,14 @@ class GarbageSchedule extends Model
     {
         return $query->where('scheduled_time', '>=', now())
                     ->orderBy('scheduled_time', 'asc');
+    }
+
+    /**
+     * Scope a query to only include active schedules.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', 'active');
     }
 
     /**

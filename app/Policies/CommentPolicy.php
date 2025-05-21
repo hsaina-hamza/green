@@ -41,19 +41,9 @@ class CommentPolicy
         if ($user->isWorker() && $wasteReport->worker_id === $user->id) {
             return true;
         }
-<<<<<<< SEARCH
-        // Workers can view comment history of reports assigned to them
-        if ($user->isWorker() && $wasteReport->assigned_worker_id === $user->id) {
-            return true;
-        }
-=======
-        // Workers can view comment history of reports assigned to them
-        if ($user->isWorker() && $wasteReport->worker_id === $user->id) {
-            return true;
-        }
 
         // Users can comment on their own reports
-        if ($wasteReport->user_id === $user->id) {
+        if ($wasteReport->reported_by === $user->id) {
             return true;
         }
 
@@ -103,12 +93,12 @@ class CommentPolicy
         }
 
         // Workers can view comment history of reports assigned to them
-        if ($user->isWorker() && $wasteReport->assigned_worker_id === $user->id) {
+        if ($user->isWorker() && $wasteReport->worker_id === $user->id) {
             return true;
         }
 
         // Users can view comment history of their own reports
-        return $wasteReport->user_id === $user->id;
+        return $wasteReport->reported_by === $user->id;
     }
 
     /**

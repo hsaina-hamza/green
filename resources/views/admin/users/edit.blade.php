@@ -3,21 +3,21 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="flex justify-between items-center mb-8">
-                        <h2 class="text-2xl font-bold text-gray-800 flex items-center">
-                            <i class="fas fa-user-edit ml-3 text-blue-500"></i>
-                            تعديل الموظف: {{ $user->name }}
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            <i class="fas fa-user-edit mr-2 text-blue-500"></i>
+                            تعديل بيانات المستخدم
                         </h2>
-                        <a href="{{ route('admin.users.index') }}" class="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition">
+                        <a href="{{ route('admin.users.index') }}" class="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300">
                             <i class="fas fa-arrow-right ml-2"></i>
-                            العودة إلى الموظفين
+                            العودة للقائمة
                         </a>
                     </div>
 
                     @if ($errors->any())
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert">
-                            <strong class="font-bold block mb-2">حدثت الأخطاء التالية:</strong>
-                            <ul class="list-disc pr-5 space-y-1">
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                            <strong class="font-bold">خطأ!</strong>
+                            <ul class="mt-2 list-disc list-inside">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
@@ -31,50 +31,68 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل</label>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-user mr-1 text-blue-500"></i>
+                                    الاسم الكامل
+                                </label>
                                 <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required
-                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-3">
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-right"
+                                       placeholder="أدخل الاسم الكامل">
                             </div>
 
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-envelope mr-1 text-blue-500"></i>
+                                    البريد الإلكتروني
+                                </label>
                                 <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required
-                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-3">
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-right"
+                                       placeholder="example@domain.com">
                             </div>
 
                             <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">كلمة المرور (اتركها فارغة للحفاظ على كلمة المرور الحالية)</label>
-                                <div class="relative">
-                                    <input type="password" name="password" id="password"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-3">
-                                    <button type="button" onclick="togglePassword('password')" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-lock mr-1 text-blue-500"></i>
+                                    كلمة المرور الجديدة (اختياري)
+                                </label>
+                                <input type="password" name="password" id="password"
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-right"
+                                       placeholder="اتركه فارغاً إذا لم ترد تغيير كلمة المرور">
                             </div>
 
                             <div>
-                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">تأكيد كلمة المرور</label>
-                                <div class="relative">
-                                    <input type="password" name="password_confirmation" id="password_confirmation"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-3">
-                                    <button type="button" onclick="togglePassword('password_confirmation')" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
+                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-lock mr-1 text-blue-500"></i>
+                                    تأكيد كلمة المرور الجديدة
+                                </label>
+                                <input type="password" name="password_confirmation" id="password_confirmation"
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-right"
+                                       placeholder="أعد إدخال كلمة المرور الجديدة">
                             </div>
 
                             <div>
-                                <label for="role" class="block text-sm font-medium text-gray-700 mb-2">الدور</label>
-                                <select name="role" id="role" required
-                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-3">
-                                    <option value="">اختر دورًا</option>
+                                <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-phone mr-1 text-blue-500"></i>
+                                    رقم الهاتف
+                                </label>
+                                <input type="text" name="phone_number" id="phone_number" value="{{ old('phone_number', $user->phone_number) }}"
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-right"
+                                       placeholder="9665XXXXXXXX">
+                            </div>
+
+                            <div>
+                                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-user-tag mr-1 text-blue-500"></i>
+                                    الدور
+                                </label>
+                                <select name="role" id="role" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-right">
+                                    <option value="">اختر الدور</option>
                                     @foreach($roles as $role)
-                                        <option value="{{ $role }}" {{ old('role', $user->role) == $role ? 'selected' : '' }}>
+                                        <option value="{{ $role }}" {{ $user->hasRole($role) ? 'selected' : '' }}>
                                             @if($role == 'admin')
                                                 مدير
                                             @elseif($role == 'worker')
-                                                عامل
+                                                موظف
                                             @else
                                                 مستخدم
                                             @endif
@@ -82,18 +100,12 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <div>
-                                <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف</label>
-                                <input type="text" name="phone_number" id="phone_number" value="{{ old('phone_number', $user->phone_number) }}"
-                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-3">
-                            </div>
                         </div>
 
-                        <div class="flex justify-end pt-4">
-                            <button type="submit" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition">
+                        <div class="flex justify-end pt-6">
+                            <button type="submit" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300 shadow-md">
                                 <i class="fas fa-save ml-2"></i>
-                                تحديث الموظف
+                                حفظ التغييرات
                             </button>
                         </div>
                     </form>
@@ -101,34 +113,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-    
-    <script>
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const icon = field.nextElementSibling.querySelector('i');
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                field.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-    </script>
-
-    <style>
-        [dir="rtl"] input, [dir="rtl"] select {
-            padding-right: 0.75rem;
-            padding-left: 2.5rem;
-        }
-        [dir="rtl"] .fa-eye, [dir="rtl"] .fa-eye-slash {
-            left: 0.75rem;
-            right: auto;
-        }
-    </style>
 </x-app-layout>

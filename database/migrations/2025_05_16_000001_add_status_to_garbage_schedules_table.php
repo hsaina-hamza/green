@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Columns already added in initial migration
+        Schema::table('garbage_schedules', function (Blueprint $table) {
+            $table->string('status')->default('active')->after('notes');
+        });
     }
 
     /**
@@ -19,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('waste_reports', function (Blueprint $table) {
-            $table->integer('estimated_size')->nullable();
-            $table->dropColumn(['quantity', 'unit']);
+        Schema::table('garbage_schedules', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 };
